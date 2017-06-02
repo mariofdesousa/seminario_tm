@@ -1,0 +1,350 @@
+---
+title: "Seminário - Mineração de Texto"
+author: "Fabiana, Mário e Rodney"
+date: "Junho de 2017"
+output: 
+  html_document: 
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+bibliography: bibliografia.bib
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Neste documento serão apresentadas as metodologias utilizadas bem como exemplos simples de códigos em R. Utilizamos as palavrás contidas nos álbuns The Wall e Darkside of the Moon do Pink-Floyd. As letras foram obtidas no site vagalume "colocar link".
+
+# Análise de contagem de palavras
+
+A contagem de palavras é a técnica mais simples para análise de dados textuais. A mecânica é simples, basta contar a quantidade de vezes que a mesma palavra repete no documento. Neste tipo de estratégia é comum a retirada do que a literatura chama de **stopping words** (palavras de paradas), que são preposições, conjunções, artigos e etc. Abordagens mais recentes sugerem que retirar as palavras de parada pode não ser adequado quando o objetivo é identificar a que tipo de documento aquele texto pertence. A visualização da informação contida na contagem de palavras geralmente se dá pelo que é conhecido como núvem de palavras. Uma núvem de palavras é um objeto gráfico que ordena as palavras por ondem de tamanho de acordo com o número de repetições que a respectiva palavra teve ao longo do texto  
+
+## The Wall
+
+```{r message=FALSE,results='hide',echo=TRUE}
+library(dplyr)
+library(stringr)
+library(tidytext)
+library(tidyr)
+library(ggplot2)
+
+thewall = read.csv("wall.csv",header = FALSE)
+
+tidy_thewall <- data_frame(line=1:551,text = as.character(thewall$V1)) %>%  
+  unnest_tokens(word, text)
+tidy_thewall
+
+data(stop_words)
+
+tidy_thewall_nostop <- tidy_thewall %>%
+  anti_join(stop_words)
+
+tidy_thewall_nostop %>%
+  count(word, sort=TRUE) %>%
+  filter(n>10) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x=word,y=n)) +
+  geom_col(color="green")+
+  labs(y="Contagem", x="Palavras")+
+  coord_flip()
+```
+## Darkside of the Moon
+
+```{r message=FALSE,results='hide',echo=TRUE}
+darkside = read.csv("darkside.csv",header = FALSE)
+head(darkside)
+dim(darkside)
+tidy_darkside <- data_frame(line=1:156,text = as.character(darkside$V1)) %>%  
+  unnest_tokens(word, text)
+tidy_darkside
+
+data(stop_words)
+tidy_darkside_nostop <- tidy_darkside %>%
+  anti_join(stop_words)
+
+tidy_darkside_nostop %>%
+  count(word, sort=TRUE) %>%
+  filter(n>3) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x=word,y=n)) +
+  geom_col(color="yellow")+
+  labs(y="Contagem", x="Palavras")+
+  coord_flip()
+```
+
+## Análise conjunta de ambos os discos
+
+```{r message=FALSE,results='hide',echo=TRUE,warning=FALSE}
+freq_Pink <- bind_rows(mutate(tidy_thewall_nostop,album="Wall"),
+                       mutate(tidy_darkside_nostop,album="DarkSide"))%>%
+mutate(word = str_extract(word, "[a-z']+")) %>%
+  count(album, word) %>%
+  group_by(album) %>%
+  mutate(proportion = n / sum(n)) %>% 
+  select(-n) %>% 
+  spread(album, proportion)
+
+library(scales) # função percent_format
+
+ggplot(freq_Pink,aes(x=DarkSide,y=Wall))+
+  geom_abline(color = "red", lty = 2,lwd=1)+
+  geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5)+
+  scale_x_log10(labels = percent_format()) +
+  scale_y_log10(labels = percent_format()) +
+  scale_color_gradient(limits = c(0, 0.001), low = "darkslategray4",
+                       high = "gray75")
+```
+
+A partir das contagens podemos fazer testes de correlação entre as proporções de palavras em cada álbum.
+
+```{r,eval=TRUE}
+cor.test(data = freq_Pink,~ DarkSide + Wall)
+```
+
+### Nuvem de palavras simples - The Wall
+
+
+```{r message=FALSE,results='hide',echo=TRUE}
+library(wordcloud)
+library(reshape2)
+tidy_thewall %>%
+  anti_join(stop_words) %>%
+  count(word) %>%
+  with(wordcloud(word, n, max.words = 100))
+```
+
+### Nuvem de palavras simples - Darkside of the Moon
+
+```{r message=FALSE,results='hide',echo=TRUE}
+tidy_darkside %>%
+  anti_join(stop_words) %>%
+  count(word) %>%
+  with(wordcloud(word, n, max.words = 100))
+```
+
+# Análise de sentimentos
+
+Em análise de sentimento o que se busca é sentimentos a partir do texto. De acordo com @messias2017 algumas aplicações da análise de sentimentos tem por objetivo:
+
+> 
+* Monitorar a reputação de alguma empresa ou marca;
+* Fornecer perspectivas analíticas para investidores sobre determinado mercado (se certo mercado tem potencial ou não);
+* Rastrear opiniões associadas a certos políticos (tais informações são úteis para o marketing do candidato) e
+* Proporcionar meios de mensurar o bem-estar dos usuários de certo modelo de smartphone.
+
+@goncalves2013 discute que não há o **melhor** método para se aplicar em análise de sentimentos. Conclusão semelhante foi obtida por @ribeiro2016 após comparar 22 métodos diferentes em 18 documentos onde não foi possível encontrar um método que fosse igualmente bom para todos os textos. 
+
+
+Para os exemplos iremos considerar os dícionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013) por estarem disponíveis no R e serem de fácil implementação.
+
+```{r message=FALSE,results='hide',echo=TRUE}
+# bancos de dados para análise de sentimentos
+get_sentiments("afinn")
+get_sentiments("bing")
+get_sentiments("nrc")
+```
+
+## The Wall
+
+```{r message=FALSE,results='hide',echo=TRUE}
+
+tidy_thewall # dados do álbum the wall
+
+# filtrando somente as palavras de alegria
+
+nrcjoy <- get_sentiments("nrc") %>% 
+  filter(sentiment == "joy")
+
+# verificando quais são as palavras de alegria do the wall
+# em ordem decrescente de frequência
+
+tidy_thewall %>%
+  inner_join(nrcjoy) %>%
+  count(word, sort = TRUE)
+
+# aqui verificamos quais palavras do the wall estão no banco de dados bing,
+# separamos as palvras em grupos formados de 10 em 10 linhas e contamos para
+# cada um desses grupos quantas palavras negativas existem e quantas positivas
+# existem. Depois fazemos duas colunas contendo a frequencia de cada sentimento
+# para cada grupo de linhas, sendo NA substituídos por zero (fill=0).
+# por fim, criamos uma medida de sentimento do grupo, dada pela diferença das
+# frequêncicas
+
+thewallsentiment <- tidy_thewall %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(index = line %/% 10, sentiment) %>%
+  spread(sentiment, n, fill = 0) %>%
+  mutate(sentiment = positive - negative)
+head(thewallsentiment)
+
+# evolução dos sentimentos ao longo do álbum para grupos de 10 linhas
+
+ggplot(thewallsentiment, aes(index, sentiment)) +
+  geom_col(show.legend = FALSE,col="yellow")+
+  labs(x="Índice",y="Sentimento")
+```
+
+## Darkside of the Moon
+
+```{r message=FALSE,results='hide',echo=TRUE}
+# same stuff for the dark side, mas aqui os grupos tem menos linhas porque esse
+# álbum é menor e tem menos palavras que o the wall
+
+darksidesentiment <- tidy_darkside %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(index = line %/% 5, sentiment) %>%
+  spread(sentiment, n, fill = 0) %>%
+  mutate(sentiment = positive - negative)
+head(darksidesentiment)
+
+ggplot(darksidesentiment, aes(index, sentiment)) +
+  geom_col(show.legend = FALSE,col="green")+
+  labs(x="Índice",y="Sentimento")
+```
+
+## Comparação dos álbuns para os três dicionários de sentimentos
+
+```{r message=FALSE,results='hide',echo=TRUE}
+
+# para o banco de dados afinn, os sentimentos são medidos em uma escala de
+# -5 a 5, daí somando os valores de todas as palavras dentre de um grupo
+# obtemos uma medida do sentimento desse grupo
+
+afinn <- tidy_thewall %>% 
+  inner_join(get_sentiments("afinn")) %>% 
+  group_by(index = line %/% 10) %>% 
+  summarise(sentiment = sum(score)) %>% 
+  mutate(method = "AFINN")
+
+# no banco bing os sentimentos são classificados positivos ou negativos, já no nrc
+# filtramos só os sentimentos positivos e negativos (não considerando os
+# labels como alegria, raiva, etc.). Depois criamos uma medida do sentimento
+# dada pela diferença da frequencia de sentimentos positivos e negativos
+
+bing_and_nrc <- bind_rows(tidy_thewall %>% 
+                            inner_join(get_sentiments("bing")) %>%
+                            mutate(method = "Bing et al."),
+                          tidy_thewall %>% 
+                            inner_join(get_sentiments("nrc") %>% 
+                                         filter(sentiment %in% c("positive", 
+                                                              "negative")) )%>%
+                            mutate(method = "NRC")) %>%
+  count(method, index = line %/% 10, sentiment) %>%
+  spread(sentiment, n, fill = 0) %>%
+  mutate(sentiment = positive - negative)
+
+# criando um gráfico da evolução dos sentimentos no the wall usando os 
+# três bancos de dados analisados
+
+bind_rows(afinn, 
+          bing_and_nrc) %>%
+  ggplot(aes(index, sentiment, fill = method)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~method, ncol = 1, scales = "free_y")+
+  labs(x="Índice",y="Sentimento")
+```
+
+# Nuvem de palavras 
+
+##  The Wall
+
+
+```{r message=FALSE,results='hide',echo=TRUE}
+tidy_thewall %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "blue"),
+                   max.words = 100)
+```
+
+## Darkside of the Moon
+
+```{r message=FALSE,results='hide',echo=TRUE}
+tidy_darkside %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "blue"),
+                   max.words = 100)
+```
+
+# Term frequency analysis
+
+```{r message=FALSE,results='hide',echo=TRUE,warning=FALSE}
+
+wall_words <- tidy_thewall %>%
+  count(word, sort = TRUE) %>%
+  ungroup()
+sum(wall_words$n)
+
+ggplot(wall_words, aes(n/sum(wall_words$n))) +
+  geom_histogram(show.legend = FALSE) +
+  xlim(NA, 0.02)
+
+
+freq_by_rank_wall <- wall_words %>% 
+  mutate(rank = row_number(), 
+         `term frequency` = n/sum(wall_words$n))
+
+freq_by_rank_wall %>% 
+  ggplot(aes(rank, `term frequency`)) + 
+  geom_line(size = 1.2, alpha = 0.8) + 
+  scale_x_log10() +
+  scale_y_log10()
+lm(log10(`term frequency`) ~ log10(rank), data = freq_by_rank_wall)
+freq_by_rank_wall %>% 
+  ggplot(aes(rank, `term frequency`)) + 
+  geom_abline(intercept = -0.9989, slope = -0.8924, color = "red",
+              linetype = 2,lwd=1.5) +
+  geom_line(size = 1.2, alpha = 0.8) + 
+  scale_x_log10() +
+  scale_y_log10()
+```
+
+## Função bind_tf_idf 
+
+```{r message=FALSE,results='hide',echo=TRUE,warning=FALSE}
+
+dark_words <- tidy_darkside %>%
+  count(word, sort = TRUE) %>%
+  ungroup()
+Pink_words <- rbind(mutate(wall_words,album="TheWall"),
+                    mutate(dark_words,album="DarkSide"))
+
+Pink_words <- Pink_words %>%
+  bind_tf_idf(word, album, n)
+Pink_words
+  
+Pink_words %>%
+  arrange(desc(tf_idf))
+
+plot_Pink <- Pink_words %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(word = factor(word, levels = rev(unique(word))))
+
+plot_Pink %>% 
+  top_n(10) %>%
+  ggplot(aes(word, tf_idf, fill = album)) +
+  geom_col() +
+  labs(x = NULL, y = "tf-idf") +
+  coord_flip()
+
+plot_Pink %>% 
+  group_by(album) %>% 
+  top_n(6) %>% 
+  ungroup %>%
+  ggplot(aes(word, tf_idf, fill = album)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = "tf-idf") +
+  facet_wrap(~album, ncol = 1, scales = "free") +
+  coord_flip()
+```
+
+# Referências bibliográficas
+
