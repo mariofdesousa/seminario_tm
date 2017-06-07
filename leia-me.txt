@@ -1,0 +1,21 @@
+1 - Descompactar o seguinte arquivo:
+
+depression_tweets_final
+
+2 - Ao fazer isso aparecerá um arquivo chamado 
+
+depression_tweets_final.gzip
+
+Este arquivo contém a base de dados já em formato de objeto do R. 
+Usando CSV ou TXT notei que estava dando problemas ao ler os dados.
+
+3 - Vá no R e utilize a função readRDS(".../depression_tweets_final.gzip")
+
+A base será carregada no R como um objeto Rdata cujo nome será udemytweets
+Agora pode fazer como desejar.
+
+Note que esse objeto não está em formato dataframe então tem que usar a função
+twListToDF do pacote twitteR  para transformar em um DataFrame. Depois disso o DF
+pode ser manipulado via procedimentos do tidy ou do tm.
+
+
