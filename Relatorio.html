@@ -214,24 +214,36 @@ div.tocify {
 
 <div id="analise-de-topicos" class="section level1">
 <h1><span class="header-section-number">1</span> Análise de tópicos</h1>
-<p>Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados. Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposta por <span class="citation">Blei, Ng, and Jordan (2003)</span>. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam <span class="citation">Berry and Kogan (2010)</span>.</p>
+<p>Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados. Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposto por <span class="citation">Blei, Ng, and Jordan (2003)</span>. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam <span class="citation">Berry and Kogan (2010)</span>.</p>
 <p>As principais características do LDA, como apresentam <span class="citation">Silge and Robinson (2017)</span>, são as seguintes:</p>
 <ul>
-<li><p>Documentos diferentes são formados por misturas de tópicos: Dados dois documentos A e B, e tópicos distintos 1 e 2, podemos ter que o A é formado em 75% por conteúdo sobre o tópico 1 e em 25% sobre o tópico 2, enquanto B é formado em 40% sobre o tópico 1 e 60% sobre o tópico 2, por exemplo.</p></li>
-<li><p>Diferentes palavras podem fazer parte de diferentes tópicos: a palavra “estudante” pode estar mais associada à um tópico sobre universidades enquanto que “cliente” pode ser mais associado à um tópico sobre empresas, mas o termo “dados” pode estar relacionado de maneira similar à ambos esses tópicos.</p></li>
+<li><p>Documentos diferentes são formados por misturas de tópicos: Dados dois documentos <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span>, e tópicos distintos 1 e 2, podemos ter que o <span class="math inline">\(A\)</span> é formado em 75% por conteúdo sobre o tópico 1 e em 25% sobre o tópico 2, enquanto <span class="math inline">\(B\)</span> é formado em 40% sobre o tópico 1 e 60% sobre o tópico 2, por exemplo.</p></li>
+<li><p>Diferentes palavras podem fazer parte de diferentes tópicos: a palavra “estudante” pode estar mais associada a um tópico sobre universidades enquanto que “cliente” pode ser mais associado a um tópico sobre empresas, mas o termo “dados” pode estar relacionado de maneira similar a ambos esses tópicos.</p></li>
 </ul>
-<p>Para exemplificar a suposição do modelo LDA vamos considerar as seguintes notações: uma palavra <span class="math inline">\(w\)</span> é uma unidade discreta de um conjunto que forma o vocabulário utilizado; um documento <span class="math inline">\(\mathbf{w} = (w_1,\ldots,w_N)\)</span> é um conjunto de <span class="math inline">\(N\)</span> palavras; um corpo <span class="math inline">\(D=\{\mathbf{w}_1,\ldots,\mathbf{w}_M\}\)</span> é um conjunto de <span class="math inline">\(M\)</span> documentos. Adicionalmente, no LDA o número de tópicos existentes é assumido conhecido, mas os tópicos em si são variáveis latentes que não conhecemos e desejamos estimar. Dessa maneira, <span class="citation">Blei, Ng, and Jordan (2003)</span> consideram as seguintes suposições na geração do corpo:</p>
+<p>Para exemplificar a suposição do modelo LDA vamos considerar as seguintes notações: uma palavra <span class="math inline">\(w\)</span> é uma unidade discreta de um conjunto que forma o vocabulário utilizado; um documento <span class="math inline">\(\mathbf{w} = \left(w_1,\ldots,w_N\right)\)</span> é um conjunto de <span class="math inline">\(N\)</span> palavras; um corpo <span class="math inline">\(D=\left\{\mathbf{w}_1,\ldots,\mathbf{w}_M\right\}\)</span> é um conjunto de <span class="math inline">\(M\)</span> documentos. Adicionalmente, no LDA o número de tópicos existentes é assumido conhecido, mas os tópicos em si são variáveis latentes que não conhecemos e desejamos estimar. Dessa maneira, <span class="citation">Blei, Ng, and Jordan (2003)</span> consideram as seguintes suposições na geração do corpo:</p>
 <ol style="list-style-type: decimal">
-<li>Gera-se <span class="math inline">\(N\sim Pois(\lambda)\)</span>;</li>
-<li>Gera-se <span class="math inline">\(\theta = Dirichlet(\mathbf{\alpha})\)</span>, o qual será o vetor de probabilidades dos <span class="math inline">\(k\)</span> tópicos;</li>
+<li>Gera-se <span class="math inline">\(N\sim \textrm{Pois}\left(\lambda\right)\)</span>;</li>
+<li>Gera-se <span class="math inline">\(\theta = \textrm{Dirichlet}\left(\mathbf{\alpha}\right)\)</span>, o qual será o vetor de probabilidades dos <span class="math inline">\(k\)</span> tópicos;</li>
 <li>Para cada uma das <span class="math inline">\(N\)</span> palavras <span class="math inline">\(w_n\)</span>:</li>
 </ol>
 <ul>
-<li><p>Sortei-se um tópico <span class="math inline">\(z_n \sim Multinomial(k,\theta)\)</span></p></li>
-<li><p>Sortei-se uma palavra <span class="math inline">\(w_n\)</span> de <span class="math inline">\(p(w_n|z_n,\beta)\)</span>, o qual é uma distribuição multinomial cujas probabilidades são condicionadas no tópico <span class="math inline">\(z_n\)</span> e em vetor desconhecido de parâmetros <span class="math inline">\(\beta\)</span>.</p></li>
+<li><p>Sorteia-se um tópico <span class="math inline">\(z_n \sim \textrm{Multinomial}\left(k,\theta\right)\)</span></p></li>
+<li><p>Sorteia-se uma palavra <span class="math inline">\(w_n\)</span> de <span class="math inline">\(p\left(w_n|z_n,\beta\right)\)</span>, que segue uma distribuição multinomial cujas probabilidades são condicionadas no tópico <span class="math inline">\(z_n\)</span> e em um vetor desconhecido de parâmetros <span class="math inline">\(\beta\)</span>.</p></li>
 </ul>
 <p>A aplicação do LDA apresentada por <span class="citation">Blei, Ng, and Jordan (2003)</span> é baseada em um modelo Bayesiano com três níveis hierárquicos, e permite estimar a probabilidade que cada palavra tem de pertencer à cada um dos tópicos, bem como estimar a probabilidade de cada documento ser sobre cada tópico.</p>
-<p>No programa R a análise de tópicos pode ser realizada através do pacote “topicmodels”, utilizando a função LDA. Uma aplicação dessa função do R é fornecida por <span class="citation">Silge and Robinson (2017)</span> em um exemplo onde livros distintos são tratados como tópicos e seus respectivos capítulos como documentos; no exemplo dos autores, mostra-se que o LDA consegue classificar quase todos capítulos corretamente em seus respectivos livros, demonstrando a eficiência do método.</p>
+<p>No programa <span class="math inline">\(\texttt{R}\)</span> a análise de tópicos pode ser realizada através do pacote <span class="math inline">\(\texttt{topicmodels}\)</span>, utilizando a função <span class="math inline">\(\texttt{LDA}\)</span>. Uma aplicação dessa função do <span class="math inline">\(\texttt{R}\)</span> é fornecida por <span class="citation">Silge and Robinson (2017)</span> em um exemplo onde livros distintos são tratados como tópicos e seus respectivos capítulos como documentos; no exemplo dos autores, mostra-se que o LDA consegue classificar quase todos capítulos corretamente em seus respectivos livros, demonstrando a eficiência do método.</p>
+</div>
+<div id="analise-de-sentimentos" class="section level1">
+<h1><span class="header-section-number">2</span> Análise de sentimentos</h1>
+<p>Em análise de sentimentos o principal objetivo consiste em fazer “inferência”&quot; sobre sentimetos expressos em forma de texto. <span class="citation">Messias et al. (2017)</span> cita algumas das recentes aplicações da referida metodologia, sendo as principais:</p>
+<ul>
+<li>Monitorar a reputação de alguma empresa ou marca;</li>
+<li>Fornecer perspectivas analíticas para investidores sobre determinado mercado (se certo mercado tem potencial ou não);</li>
+<li>Rastrear opiniões associadas a certos políticos (tais informações são úteis para o marketing do candidato) e</li>
+<li>Proporcionar meios de mensurar o bem-estar dos usuários de certo modelo de smartphone.</li>
+</ul>
+<p><span class="citation">Gonçalves et al. (2013)</span> discute que não há a “melhor” técnica para se aplicar em análise de sentimentos. Conclusão semelhante foi obtida por <span class="citation">Ribeiro et al. (2016)</span> após comparar 22 métodos diferentes em 18 documentos onde não foi possível encontrar um método que fosse igualmente bom, em termos de classificação, para todos os textos.</p>
+<p>Na aplicação sobre depressão iremos considerar os dícionários de sentimentos <strong>afinn</strong>(<span class="citation">Nielsen (2011)</span>), <strong>bing</strong>(<span class="citation">Liu, Hu, and Cheng (2005)</span>) e <strong>nrc</strong>(<span class="citation">Mohammad and Turney (2013)</span>), por estarem disponíveis no R.</p>
 </div>
 <div id="referencias-bibliograficas" class="section level1 unnumbered">
 <h1>Referências bibliográficas</h1>
@@ -241,6 +253,24 @@ div.tocify {
 </div>
 <div id="ref-blei2003latent">
 <p>Blei, David M, Andrew Y Ng, and Michael I Jordan. 2003. “Latent Dirichlet Allocation.” <em>Journal of Machine Learning Research</em> 3: 993–1022.</p>
+</div>
+<div id="ref-goncalves2013">
+<p>Gonçalves, Pollyanna, Matheus Araújo, Fabrício Benevenuto, and Meeyoung Cha. 2013. “Comparing and Combining Sentiment Analysis Methods.” In <em>Proceedings of the First Acm Conference on Online Social Networks</em>, 27–38. ACM.</p>
+</div>
+<div id="ref-bing2005">
+<p>Liu, Bing, Minqing Hu, and Junsheng Cheng. 2005. “Opinion Observer: Analyzing and Comparing Opinions on the Web.” In <em>Proceedings of the 14th International Conference on World Wide Web</em>, 342–51. ACM.</p>
+</div>
+<div id="ref-messias2017">
+<p>Messias, Johnnatan, João P Diniz, Elias Soares, Miller Ferreira, Matheus Araújo, Lucas Bastos, Manoel Miranda, and Fabrício Benevenuto. 2017. “An Evaluation of Sentiment Analysis for Mobile Devices.” <em>Social Network Analysis and Mining</em> 7 (1). Springer: 20.</p>
+</div>
+<div id="ref-nrc2013">
+<p>Mohammad, Saif M, and Peter D Turney. 2013. “Nrc Emotion Lexicon.” NRC Technical Report.</p>
+</div>
+<div id="ref-afinn2011">
+<p>Nielsen, Finn Årup. 2011. “A New Anew: Evaluation of a Word List for Sentiment Analysis in Microblogs.” <em>ArXiv Preprint ArXiv:1103.2903</em>.</p>
+</div>
+<div id="ref-ribeiro2016">
+<p>Ribeiro, Filipe N, Matheus Araújo, Pollyanna Gonçalves, Marcos André Gonçalves, and Fabrício Benevenuto. 2016. “SentiBench-a Benchmark Comparison of State-of-the-Practice Sentiment Analysis Methods.” <em>EPJ Data Science</em> 5 (1). Springer: 1–29.</p>
 </div>
 <div id="ref-Silge2017Text">
 <p>Silge, Julia, and David Robinson. 2017. <em>Text Mining with R: A Tidy Approach</em>. O’Reilly Media.</p>

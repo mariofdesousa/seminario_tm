@@ -18,31 +18,48 @@ bibliography: bibliografia.bib
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r,echo=FALSE,message=FALSE}
+## Adicionar todos os pacotes que serão utilizados AQUI
+```
+
+
 # Análise de tópicos
 
-Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados.  Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposta por @blei2003latent. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam @berry2010text.
+Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados.  Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposto por @blei2003latent. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam @berry2010text.
 
 As principais características do LDA, como apresentam @Silge2017Text, são as seguintes:
 
-* Documentos diferentes são formados por misturas de tópicos: Dados dois documentos A e B, e tópicos distintos 1 e 2, podemos ter que o A é formado em 75% por conteúdo sobre o tópico 1 e em 25% sobre o tópico 2, enquanto B é formado em 40% sobre o tópico 1 e 60% sobre o tópico 2, por exemplo.
+* Documentos diferentes são formados por misturas de tópicos: Dados dois documentos $A$ e $B$, e tópicos distintos 1 e 2, podemos ter que o $A$ é formado em 75% por conteúdo sobre o tópico 1 e em 25% sobre o tópico 2, enquanto $B$ é formado em 40% sobre o tópico 1 e 60% sobre o tópico 2, por exemplo.
 
-* Diferentes palavras podem fazer parte de diferentes tópicos: a palavra "estudante" pode estar mais associada à um tópico sobre universidades enquanto que "cliente" pode ser mais associado à um tópico sobre empresas, mas o termo "dados" pode estar relacionado de maneira similar à ambos esses tópicos.
+* Diferentes palavras podem fazer parte de diferentes tópicos: a palavra "estudante" pode estar mais associada a um tópico sobre universidades enquanto que "cliente" pode ser mais associado a um tópico sobre empresas, mas o termo "dados" pode estar relacionado de maneira similar a ambos esses tópicos.
 
-Para exemplificar a suposição do modelo LDA vamos considerar as seguintes notações: uma palavra $w$ é uma unidade discreta de um conjunto que forma o vocabulário utilizado; um documento $\mathbf{w} = (w_1,\ldots,w_N)$ é um conjunto de $N$ palavras; um corpo $D=\{\mathbf{w}_1,\ldots,\mathbf{w}_M\}$ é um conjunto de $M$ documentos. Adicionalmente, no LDA o número de tópicos existentes é assumido conhecido, mas os tópicos em si são variáveis latentes que não conhecemos e desejamos estimar. Dessa maneira, @blei2003latent consideram as seguintes suposições na geração do corpo:
+Para exemplificar a suposição do modelo LDA vamos considerar as seguintes notações: uma palavra $w$ é uma unidade discreta de um conjunto que forma o vocabulário utilizado; um documento $\mathbf{w} = \left(w_1,\ldots,w_N\right)$ é um conjunto de $N$ palavras; um corpo $D=\left\{\mathbf{w}_1,\ldots,\mathbf{w}_M\right\}$ é um conjunto de $M$ documentos. Adicionalmente, no LDA o número de tópicos existentes é assumido conhecido, mas os tópicos em si são variáveis latentes que não conhecemos e desejamos estimar. Dessa maneira, @blei2003latent consideram as seguintes suposições na geração do corpo:
 
-1. Gera-se $N\sim Pois(\lambda)$;
-2. Gera-se $\theta = Dirichlet(\mathbf{\alpha})$, o qual será o vetor de probabilidades dos $k$ tópicos;
+1. Gera-se $N\sim \textrm{Pois}\left(\lambda\right)$;
+2. Gera-se $\theta = \textrm{Dirichlet}\left(\mathbf{\alpha}\right)$, o qual será o vetor de probabilidades dos $k$ tópicos;
 3. Para cada uma das $N$ palavras $w_n$:
 
-+ Sortei-se um tópico $z_n \sim Multinomial(k,\theta)$
++ Sorteia-se um tópico $z_n \sim \textrm{Multinomial}\left(k,\theta\right)$
 
-+ Sortei-se uma palavra $w_n$ de $p(w_n|z_n,\beta)$, o qual é uma distribuição multinomial cujas probabilidades são condicionadas no tópico $z_n$ e em vetor desconhecido de parâmetros $\beta$.
++ Sorteia-se uma palavra $w_n$ de $p\left(w_n|z_n,\beta\right)$, que segue uma distribuição multinomial cujas probabilidades são condicionadas no tópico $z_n$ e em um vetor desconhecido de parâmetros $\beta$.
 
 
 A aplicação do LDA apresentada por @blei2003latent é baseada em um modelo Bayesiano com três níveis hierárquicos, e permite estimar a probabilidade que cada palavra tem de pertencer à cada um dos tópicos, bem como estimar a probabilidade de cada documento ser sobre cada tópico.
 
-No programa R a análise de tópicos pode ser realizada através do pacote "topicmodels", utilizando a função LDA. Uma aplicação dessa função do R é fornecida por @Silge2017Text em um exemplo onde livros distintos são tratados como tópicos e seus respectivos capítulos como documentos; no exemplo dos autores, mostra-se que o LDA consegue classificar quase todos capítulos corretamente em seus respectivos livros, demonstrando a eficiência do método.
+No programa $\texttt{R}$ a análise de tópicos pode ser realizada através do pacote $\texttt{topicmodels}$, utilizando a função $\texttt{LDA}$. Uma aplicação dessa função do $\texttt{R}$ é fornecida por @Silge2017Text em um exemplo onde livros distintos são tratados como tópicos e seus respectivos capítulos como documentos; no exemplo dos autores, mostra-se que o LDA consegue classificar quase todos capítulos corretamente em seus respectivos livros, demonstrando a eficiência do método.
 
+# Análise de sentimentos
+
+Em análise de sentimentos o principal objetivo consiste em fazer "inferência"" sobre sentimetos expressos em forma de texto. @messias2017 cita algumas das recentes aplicações da referida metodologia, sendo as principais:
+
+* Monitorar a reputação de alguma empresa ou marca;
+* Fornecer perspectivas analíticas para investidores sobre determinado mercado (se certo mercado tem potencial ou não);
+* Rastrear opiniões associadas a certos políticos (tais informações são úteis para o marketing do candidato) e
+* Proporcionar meios de mensurar o bem-estar dos usuários de certo modelo de smartphone.
+
+@goncalves2013 discute que não há a "melhor" técnica para se aplicar em análise de sentimentos. Conclusão semelhante foi obtida por @ribeiro2016 após comparar 22 métodos diferentes em 18 documentos onde não foi possível encontrar um método que fosse igualmente bom, em termos de classificação, para todos os textos. 
+
+Na aplicação sobre depressão iremos considerar os dícionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013), por estarem disponíveis no R.
 
 # Referências bibliográficas
 
