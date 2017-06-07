@@ -22,6 +22,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Adicionar todos os pacotes que serão utilizados AQUI
 ```
 
+# Metodologia
+
+## Descrição dos dados
+A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se é necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com os métodos  $\texttt{tidy}$ e $\texttt{tm}$.
 
 # Análise de tópicos
 

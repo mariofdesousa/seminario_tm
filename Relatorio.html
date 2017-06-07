@@ -212,8 +212,15 @@ div.tocify {
 </div>
 
 
+<div id="metodologia" class="section level1">
+<h1><span class="header-section-number">1</span> Metodologia</h1>
+<div id="descricao-dos-dados" class="section level2">
+<h2><span class="header-section-number">1.1</span> Descrição dos dados</h2>
+<p>A base de dados utilizada contém 30000 tweets extraídos com auxílio da função <span class="math inline">\(\texttt{searchTwitter}\)</span> do pacote <span class="math inline">\(\texttt{twitteR}\)</span>. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras “depression”, “depressive” e “depressed”. A função <span class="math inline">\(\texttt{searchTwitter}\)</span> retorna uma lista com diversas informações, então faz-se é necessário aplicar a função <span class="math inline">\(\texttt{twListToPdf}\)</span>, também disponível no pacote <span class="math inline">\(\texttt{twitteR}\)</span>, para transformar a lista do twitter em um dataframe compatível com os métodos <span class="math inline">\(\texttt{tidy}\)</span> e <span class="math inline">\(\texttt{tm}\)</span>.</p>
+</div>
+</div>
 <div id="analise-de-topicos" class="section level1">
-<h1><span class="header-section-number">1</span> Análise de tópicos</h1>
+<h1><span class="header-section-number">2</span> Análise de tópicos</h1>
 <p>Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados. Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposto por <span class="citation">Blei, Ng, and Jordan (2003)</span>. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam <span class="citation">Berry and Kogan (2010)</span>.</p>
 <p>As principais características do LDA, como apresentam <span class="citation">Silge and Robinson (2017)</span>, são as seguintes:</p>
 <ul>
@@ -234,7 +241,7 @@ div.tocify {
 <p>No programa <span class="math inline">\(\texttt{R}\)</span> a análise de tópicos pode ser realizada através do pacote <span class="math inline">\(\texttt{topicmodels}\)</span>, utilizando a função <span class="math inline">\(\texttt{LDA}\)</span>. Uma aplicação dessa função do <span class="math inline">\(\texttt{R}\)</span> é fornecida por <span class="citation">Silge and Robinson (2017)</span> em um exemplo onde livros distintos são tratados como tópicos e seus respectivos capítulos como documentos; no exemplo dos autores, mostra-se que o LDA consegue classificar quase todos capítulos corretamente em seus respectivos livros, demonstrando a eficiência do método.</p>
 </div>
 <div id="analise-de-sentimentos" class="section level1">
-<h1><span class="header-section-number">2</span> Análise de sentimentos</h1>
+<h1><span class="header-section-number">3</span> Análise de sentimentos</h1>
 <p>Em análise de sentimentos o principal objetivo consiste em fazer “inferência”&quot; sobre sentimetos expressos em forma de texto. <span class="citation">Messias et al. (2017)</span> cita algumas das recentes aplicações da referida metodologia, sendo as principais:</p>
 <ul>
 <li>Monitorar a reputação de alguma empresa ou marca;</li>
