@@ -1,0 +1,48 @@
+---
+title: "Seminário - Mineração de Texto"
+author: "Fabiana, Fernando, Mário, Rafael e Rodney"
+date: "Junho de 2017"
+output: 
+  html_document: 
+    highlight: haddock
+    number_sections: yes
+    theme: journal
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+bibliography: bibliografia.bib
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Análise de tópicos
+
+Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados.  Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposta por @blei2003latent. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam @berry2010text.
+
+As principais características do LDA, como apresentam @Silge2017Text, são as seguintes:
+
+* Documentos diferentes são formados por misturas de tópicos: Dados dois documentos A e B, e tópicos distintos 1 e 2, podemos ter que o A é formado em 75% por conteúdo sobre o tópico 1 e em 25% sobre o tópico 2, enquanto B é formado em 40% sobre o tópico 1 e 60% sobre o tópico 2, por exemplo.
+
+* Diferentes palavras podem fazer parte de diferentes tópicos: a palavra "estudante" pode estar mais associada à um tópico sobre universidades enquanto que "cliente" pode ser mais associado à um tópico sobre empresas, mas o termo "dados" pode estar relacionado de maneira similar à ambos esses tópicos.
+
+Para exemplificar a suposição do modelo LDA vamos considerar as seguintes notações: uma palavra $w$ é uma unidade discreta de um conjunto que forma o vocabulário utilizado; um documento $\mathbf{w} = (w_1,\ldots,w_N)$ é um conjunto de $N$ palavras; um corpo $D=\{\mathbf{w}_1,\ldots,\mathbf{w}_M\}$ é um conjunto de $M$ documentos. Adicionalmente, no LDA o número de tópicos existentes é assumido conhecido, mas os tópicos em si são variáveis latentes que não conhecemos e desejamos estimar. Dessa maneira, @blei2003latent consideram as seguintes suposições na geração do corpo:
+
+1. Gera-se $N\sim Pois(\lambda)$;
+2. Gera-se $\theta = Dirichlet(\mathbf{\alpha})$, o qual será o vetor de probabilidades dos $k$ tópicos;
+3. Para cada uma das $N$ palavras $w_n$:
+
++ Sortei-se um tópico $z_n \sim Multinomial(k,\theta)$
+
++ Sortei-se uma palavra $w_n$ de $p(w_n|z_n,\beta)$, o qual é uma distribuição multinomial cujas probabilidades são condicionadas no tópico $z_n$ e em vetor desconhecido de parâmetros $\beta$.
+
+
+A aplicação do LDA apresentada por @blei2003latent é baseada em um modelo Bayesiano com três níveis hierárquicos, e permite estimar a probabilidade que cada palavra tem de pertencer à cada um dos tópicos, bem como estimar a probabilidade de cada documento ser sobre cada tópico.
+
+No programa R a análise de tópicos pode ser realizada através do pacote "topicmodels", utilizando a função LDA. Uma aplicação dessa função do R é fornecida por @Silge2017Text em um exemplo onde livros distintos são tratados como tópicos e seus respectivos capítulos como documentos; no exemplo dos autores, mostra-se que o LDA consegue classificar quase todos capítulos corretamente em seus respectivos livros, demonstrando a eficiência do método.
+
+
+# Referências bibliográficas
+
