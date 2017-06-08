@@ -63,7 +63,11 @@ Em análise de sentimentos o principal objetivo consiste em fazer "inferência""
 
 @goncalves2013 discute que não há a "melhor" técnica para se aplicar em análise de sentimentos. Conclusão semelhante foi obtida por @ribeiro2016 após comparar 22 métodos diferentes em 18 documentos onde não foi possível encontrar um método que fosse igualmente bom, em termos de classificação, para todos os textos. 
 
-Na aplicação sobre depressão iremos considerar os dicionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013), por estarem disponíveis no R.
+Na aplicação sobre depressão iremos considerar os dicionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013), por estarem disponíveis no R. Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras em que são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras. De modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais posiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
+
+Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. É haver algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulário são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto de séculos atrás. A análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
+
+
 
 # Referências bibliográficas
 
