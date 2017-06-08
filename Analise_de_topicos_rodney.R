@@ -15,8 +15,14 @@ library(tibble)
 library(RWeka)
 library(twitteR)
 
-udemytdm <- read_csv("base_seminario.csv")
+udemytweets <- readRDS("depression_tweets_final.gzip")
+class(udemytweets)
+dim(udemytweets)
+udemytdm <- twListToDF(udemytweets)
+#udemytdm <- read_csv("base_seminario.csv")
 class(udemytdm)
+dim(udemytdm)
+head(udemytdm)
 
 replace_reg <- "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
 unnest_reg <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
@@ -51,7 +57,7 @@ depre_topics
 # a cada um dos tópicos
 depre_top_terms <- depre_topics %>%
   group_by(topic) %>%
-  top_n(10, beta) %>%
+  top_n(20, beta) %>%
   ungroup() %>%
   arrange(topic, -beta)
 depre_top_terms$term
@@ -72,7 +78,7 @@ beta_spread <- depre_topics %>%
 beta_spread
 
 beta_spread %>%
-  top_n(20,abs(log_ratio)) %>%
+  top_n(10,abs(log_ratio)) %>%
   mutate(term = reorder(term, log_ratio)) %>%
   ggplot(aes(term, log_ratio)) +
   geom_col(show.legend = FALSE) +
@@ -83,11 +89,11 @@ beta_spread %>%
 depre_topics_id <- tidy(depre_lda, matrix = "gamma")
 depre_topics_id
 depre_topics_id %>% group_by(topic) %>%
-  top_n(10) %>% arrange(topic, desc(gamma))
+  top_n(5) %>% arrange(topic, desc(gamma))
 
 # Aqui analisamos algumas das pessoas com as maiores probabilidades de 
 # escrever sobre algum dos tópicos
-tidy_tweets %>% filter(screenName == "DouglasConley13") %>% 
+tidy_tweets %>% filter(screenName == "suicida_mi_") %>% 
   count(word, sort = TRUE) %>%
   filter(n > 3) %>%
   mutate(word = reorder(word, n)) %>%
@@ -95,10 +101,10 @@ tidy_tweets %>% filter(screenName == "DouglasConley13") %>%
   geom_col() +
   xlab(NULL) +
   coord_flip()
-aux = udemytdm[udemytdm$screenName == "DouglasConley13",]
+aux = udemytdm[udemytdm$screenName == "suicida_mi_",]
 aux$text
 
-aux <- tidy_tweets %>% filter(screenName == "fahadaziz532") %>% 
+tidy_tweets %>% filter(screenName == "Hope4Siblings") %>% 
   count(word, sort = TRUE) %>%
   filter(n > 3) %>%
   mutate(word = reorder(word, n)) %>%
@@ -106,10 +112,10 @@ aux <- tidy_tweets %>% filter(screenName == "fahadaziz532") %>%
   geom_col() +
   xlab(NULL) +
   coord_flip()
-aux = udemytdm[udemytdm$screenName == "fahadaziz532",]
+aux = udemytdm[udemytdm$screenName == "Hope4Siblings",]
 aux$text
 
-aux <- tidy_tweets %>% filter(screenName == "Edgy_Barbie") %>% 
+tidy_tweets %>% filter(screenName == "duckwellsvintag") %>% 
   count(word, sort = TRUE) %>%
   filter(n > 3) %>%
   mutate(word = reorder(word, n)) %>%
@@ -117,6 +123,6 @@ aux <- tidy_tweets %>% filter(screenName == "Edgy_Barbie") %>%
   geom_col() +
   xlab(NULL) +
   coord_flip()
-aux = udemytdm[udemytdm$screenName == "Edgy_Barbie",]
+aux = udemytdm[udemytdm$screenName == "duckwellsvintag",]
 aux$text
 

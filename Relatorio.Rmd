@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Metodologia
 
 ## Descrição dos dados
-A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se é necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com os métodos  $\texttt{tidy}$ e $\texttt{tm}$.
+A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com os métodos  $\texttt{tidy}$ e $\texttt{tm}$.
 
 # Análise de tópicos
 
@@ -63,7 +63,7 @@ Em análise de sentimentos o principal objetivo consiste em fazer "inferência""
 
 @goncalves2013 discute que não há a "melhor" técnica para se aplicar em análise de sentimentos. Conclusão semelhante foi obtida por @ribeiro2016 após comparar 22 métodos diferentes em 18 documentos onde não foi possível encontrar um método que fosse igualmente bom, em termos de classificação, para todos os textos. 
 
-Na aplicação sobre depressão iremos considerar os dícionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013), por estarem disponíveis no R.
+Na aplicação sobre depressão iremos considerar os dicionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013), por estarem disponíveis no R.
 
 # Referências bibliográficas
 
