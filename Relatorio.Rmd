@@ -69,6 +69,8 @@ Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos pal
 
 ## Análise de sentimentos
 
+## Análise de sentimentos
+
 ```{r, message=FALSE,results='hide',echo=TRUE}
 
 if("dplyr" %in% rownames(installed.packages())==FALSE)
@@ -134,7 +136,7 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-  xlab("Sentiment = \"Negative\"") +
+  xlab("Negative") +
   ylab("Número de ocorrências")+
   coord_flip()
 ```
@@ -150,7 +152,7 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-  xlab("Sentiment = \"Sadness\"") +
+  xlab("Sadness") +
   ylab("Número de ocorrências")+
   coord_flip()
 ```
@@ -166,7 +168,7 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-  xlab("Sentiment = \"Anger\"") +
+  xlab("Anger") +
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
@@ -182,7 +184,7 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-  xlab("Sentiment = \"Fear\"") +
+  xlab("Fear") +
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
@@ -198,7 +200,7 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-  xlab("Sentiment = \"Disgust\"") +
+  xlab("Disgust") +
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
@@ -219,7 +221,7 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-  xlab("Sentiment = \"Surprise\"") +
+  xlab("Surprise") +
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
@@ -253,7 +255,7 @@ Ao comparar a frequência de palavras relacionadas ao sentimento "surprise" obse
   ggplot(aes(index, sentiment)) +
   geom_col(show.legend = FALSE) +
   xlab("Index")+
-  ylab("Sentimento")
+  ylab("Score")
 ```
 
 O gráfico acima, criado a partir do dicionário **bing** é conciso em informar que a base de dados em questão possui elevada aparição de palavras negativas. Note que no dicionário **nrc** encontramos certas palavras positivas associadas ao sentimento "surprise", contudo essas palavras não alteram a característica extremamente negativa do texto. Esta conclusão é obtida ao observarmos que em grupos de 150 não há nenhum com score positivo. 
@@ -378,9 +380,11 @@ if("ggraph" %in% rownames(installed.packages())==FALSE)
 {install.packages("ggraph")};library(ggraph)
 ### Rede de palavras
 
+mystopwords_rede <- c(stop_words$word,"rn","bc","wcw","af","lol")
+
 bigrams_filtered <- bigrams_separated %>%
-  filter(!word1 %in% stop_words$word) %>%
-  filter(!word2 %in% stop_words$word)
+  filter(!word1 %in% mystopwords_rede) %>%
+  filter(!word2 %in% mystopwords_rede)
 
 bigram_counts <- bigrams_filtered %>% 
   count(word1, word2, sort = TRUE)
@@ -403,6 +407,12 @@ ggraph(bigram_graph, layout = "fr") +
   geom_node_text(aes(label = name), repel=TRUE, point.padding = unit(0.2, "lines")) +
   theme_void()
 ```
+
+A rede de palavras apresenta três nós nos entornos das palavras "depression", "depressive" e "depressed". Algo desta natureza já era esperado uma vez que foram realizadas buscas que continham estas palavras. É interessante observar que palavras de cunho técnico, "clinical", "severe", "deep" e "anxiety" estão relacionadas com a palavra "depression", ao passo que palavras de cunho pejorativo se encontram mais próximas de "depressed" e "depressive" se conecta, na grande parte dos casos, com palavras relacionadas ao grau de depressão ou a eventos relacionados à doença. 
+
+É relevante destacar que outras conexões de palavras aparecem com relativa frequência ao longo do texto, sendo as principais: "hard"->"time", "mental"->"health", "social"->"media" e "love"->"island". Com excessão da última, as demais conexões estão relacionadas, segundo a literatura pertinente, com depressão sendo "social media" uma aparição bastante interessante.
+
+No contexto da análise de sentimentos já está evidente que ansiedade possui relação próxima com depressão e sentimentos relacionados. Abaixo realizamos uma análise de correlação entre as palavras cujo objetivo é identifica palavras mais correlacionadas com algum termo específico, no caso "anxiety". 
 
 ```{r message=FALSE,results='hide',echo=TRUE}
 
@@ -432,9 +442,11 @@ word_cors %>%
   geom_bar(stat = "identity") +
   facet_wrap(~ item1, scales = "free") +
   ylab("Correlação")+
-  xlab("Palavras")+
+  xlab(NULL)+
   coord_flip()
 ```
+
+As palavras mais correlacionadas com "anxiety" são "depression", "disorder" e "social". Mais uma vez se comprova a estreita relação entre ansiedade e depressão. A aparição da palavra "social" neste contexto é bastante interessante pois, segundo a rede de palavras, "social" é frequentemente seguido de "media", então conclui-se que há correlação positiva entre "social media" e "anxiety". Sendo assim observa-se que há estreita relação entre "social media" e depressão, relacão intermediada por "anxiety". 
 
 ## Análise de tópicos
 
