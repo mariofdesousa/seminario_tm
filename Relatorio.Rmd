@@ -454,5 +454,71 @@ word_cors %>%
   coord_flip()
 ```
 
+## Análise de tópicos
+
+```{r message=FALSE,results='hide',echo=TRUE}
+if("topicmodels" %in% rownames(installed.packages())==FALSE)
+{install.packages("topicmodels")};library(topicmodels)
+
+# Criando um tidy com contando as palavras por usuário
+tidy_data <- tidy_tweets %>%
+    group_by(screenName) %>%
+    count(word, sort = TRUE) %>%
+    filter(n >= 0)
+# criando um DocumentTermMatrix para ser usado na função LDA
+depre_dtm <- tidy_data %>% cast_dtm(screenName, word, n)
+
+# aplicando a análise de tópicos
+depre_lda <- LDA(depre_dtm, k = 2, control = list(seed = 1234))
+
+# usando o tidy para extrair as probabilidades tópico/palavra
+depre_topics <- tidy(depre_lda, matrix = "beta")
+```
+
+```{r message=FALSE,results='hide',echo=TRUE}
+# aqui extraímos as palavras com maiores probabilidades de pertecerem
+# a cada um dos tópicos
+depre_top_terms <- depre_topics %>%
+  group_by(topic) %>%
+  top_n(10, beta) %>%
+  ungroup() %>%
+  arrange(topic, -beta)
+# gerando o gráfico
+depre_top_terms %>%
+  mutate(term = reorder(term, beta)) %>%
+  ggplot(aes(term, beta, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  xlab("termo") +
+  facet_wrap(~ topic, scales = "free") +
+  coord_flip()
+```
+
+```{r message=FALSE,echo=TRUE}
+# Aqui calculamos a probabilidade de cada pessoa escrever sobre
+# cada um dos tópicos
+depre_topics_id <- tidy(depre_lda, matrix = "gamma")
+depre_topics_id %>% group_by(topic) %>%
+  top_n(3) %>% arrange(topic, desc(gamma))
+
+# Aqui analisamos algumas das pessoas com as maiores probabilidades de 
+# escrever sobre algum dos tópicos
+exemplo <- tweets.df %>% filter(screenName == "_Depressed_Zuka") %>%
+  select(text)
+exemplo$text[15]
+
+exemplo <- tweets.df %>% filter(screenName == "Quixotitron_4") %>%
+  select(text)
+exemplo$text[1]
+
+exemplo <- tweets.df %>% filter(screenName == "RF_NYC_2010") %>%
+  select(text)
+exemplo$text[5]
+
+exemplo <- tweets.df %>% filter(screenName == "DepressionRoots") %>%
+  select(text)
+exemplo$text[2]
+```
+
+
 # Referências bibliográficas
 
