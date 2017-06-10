@@ -134,33 +134,12 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-  xlab(NULL) +
+  xlab("Sentiment = \"Negative\"") +
   ylab("Número de ocorrências")+
   coord_flip()
 ```
-
-Analisar o gráfico
-
 ```{r message=FALSE,results='hide',echo=TRUE}
-nrneg <- get_sentiments("nrc") %>% 
-  filter(sentiment == "negative")
-
-tidy_tweets %>%
-  inner_join(nrneg) %>%
-  count(word, sort = TRUE)%>%
-  filter(n > 25 & n < 500) %>%
-  mutate(word = reorder(word, n)) %>%
-  ggplot(aes(word, n)) +
-  geom_col() +
-  xlab(NULL) +
-  ylab("Número de ocorrências")+
-  coord_flip()
-```
-
-```{r message=FALSE,results='hide',echo=TRUE}
-
-#############################################
-#####         sadness                    ####   
+#####sadness    
 nrsad <- get_sentiments("nrc") %>% 
   filter(sentiment == "sadness")
 
@@ -171,17 +150,14 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-    xlab(NULL) +
+  xlab("Sentiment = \"Sadness\"") +
   ylab("Número de ocorrências")+
   coord_flip()
 ```
-  
 ```{r message=FALSE,results='hide',echo=TRUE}
-#############################################
 #####         anger                      ####   
 nrang <- get_sentiments("nrc") %>% 
   filter(sentiment == "anger")
-
 
 tidy_tweets %>%
   inner_join(nrang) %>%
@@ -190,15 +166,12 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-    xlab(NULL) +
+  xlab("Sentiment = \"Anger\"") +
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
-
 ```{r message=FALSE,results='hide',echo=TRUE}
-
-#############################################
-#####         fear                       ####   
+#####  fear      
 nrfear <- get_sentiments("nrc") %>% 
   filter(sentiment == "fear")
 
@@ -209,14 +182,12 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-    xlab(NULL) +
+  xlab("Sentiment = \"Fear\"") +
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
-
 ```{r message=FALSE,results='hide',echo=TRUE}
-#############################################
-#####         disgust                    ####   
+##### disgust 
 nrdisg <- get_sentiments("nrc") %>% 
   filter(sentiment == "disgust")
 
@@ -227,32 +198,36 @@ tidy_tweets %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-    xlab(NULL) +
+  xlab("Sentiment = \"Disgust\"") +
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
 
+Utilizando o dicionário **nrc**, observamos a frequência de palavras relacionadas aos sentimentos contidos no dicionário. O objetivo deste tipo de análise é verificar quais palavras estão associadas a quais sentimentos no âmbito da análise em questão.
+
+É interessante destacar que palavras relacionadas a ansiedade, suicídio, morte e cansaço são recorrentes com alta frequência quando contrastamos os sentimentos "negative", "anger", "fear" e "disgust". Este resultado é interessante pois a literatura comumente não encontra alta frequência de palavras associadas a sentimentos distintos. A palavra "anxiety" merece atenção especial uma vez que há referências robustas relacionando ansiedade com depressão e, possivelmente, suicídio. 
+
 ```{r message=FALSE,results='hide',echo=TRUE}
-#############################################
-#####         surprise                   ####   
+#####surprise  
 nrsurp <- get_sentiments("nrc") %>% 
   filter(sentiment == "surprise")
 
 tidy_tweets %>%
   inner_join(nrsurp) %>%
   count(word, sort = TRUE) %>%
-  filter(n > 5 & n < 500) %>%
+  filter(n > 15 & n < 500) %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   geom_col() +
-    xlab(NULL) +
+  xlab("Sentiment = \"Surprise\"") +
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
 
+Ao comparar a frequência de palavras relacionadas ao sentimento "surprise" observa-se a presença de diversas palavras positivas. Um resultado curioso é a presença da palavra "Trump", uma óbvia referência ao presidente dos Estados Unidos Donald Trump. Ainda avaliado as ocorrências em "surprise" nota-se que "hope" é uma palavra que aparece com relativa frequência nos tweets relacionados com depressão. Obviamente, "money", também aparece com certa frequência
+
 ```{r message=FALSE,results='hide',echo=TRUE}
-#################################################################
-################# Dicionário Bing               #################     
+################# Dicionário Bing      
  tweets_tidy_df %>% 
   filter(!str_detect(text, "^RT"),
          text != "im",
@@ -281,7 +256,7 @@ tidy_tweets %>%
   ylab("Sentimento")
 ```
 
-
+O gráfico acima, criado a partir do dicionário **bing** é conciso em informar que a base de dados em questão possui elevada aparição de palavras negativas. Note que no dicionário **nrc** encontramos certas palavras positivas associadas ao sentimento "surprise", contudo essas palavras não alteram a característica extremamente negativa do texto. Esta conclusão é obtida ao observarmos que em grupos de 150 não há nenhum com score positivo. 
 ```{r message=FALSE,results='hide',echo=TRUE}
 #################################################################
 ################# Dicionário afinn              #################     
@@ -332,6 +307,10 @@ bind_rows(afinn,bing_and_nrc) %>%
   xlab("Index")+
   facet_wrap(~method, ncol = 1, scales = "free_y") 
 ```
+
+A comparação entre os três dicionários corrobora o elevado caráter negativo das palavras utilizadas. É relevante ressaltar que, embora o dicionário **afinn** apresente os menores scores, é o dicionário que aponta mais scores positivos para grupos de 20 palavras. No caso aqui considerado os dicionários evidenciam resultados parecidos entre si. Para fins de comparação utilizou-se, para o vocabulário **nrc**, as palavras relacionadas aos sentimentos "positive" e "negative" do referido dicionário.
+
+As análises realizadas até este ponto foram realizadas por meio de unigramas, isto é, análises de palavra por palavra em separado. Análises baseadas em unigramas podem não ser a melhor opção pois há composições de palavras que alteram completamente o sentido da frase. Um exemplo intuitivo e iminente são as palavras precedidas por "not". Quando este é o caso as análises de unigramas captam apenas o sentido de uma palavra, não há como saber se a referida palavra está precedida por "not", o que obviamente altera complemente o sentido da expressão. Para evitar tais problemas e obtermos as sequências de palavras mais frequentes no texto prosseguimos com uma análise baseada em bigramas, isto é, análises baseadas em composições de duas palavras ao invés de uma.
 
 ```{r message=FALSE,results='hide',echo=TRUE}
 #### Bigramas
@@ -387,6 +366,9 @@ depression_words %>%
   coord_flip()
 ```
 
+Em análise de bigramas algo relevante é a quantidade de vezes que alguma palavra de interesse, no caso "depression", é precedida de outras palavras. Observa-se a ocorrência de algumas palavras relacionadas positivas, sendo as principais "love" e "win". Pelo espectro negativo há de se ressaltar o elevado número de vezes em que a palavra "depression" é precedida de "anxiety", "kills" e palavras relacionadas a suicídio. Confirma-se, a priori, os achados nas análises de unigramas quando se comparou a ocorrência de palavras relacionadas a sentimentos do dicionário **nrc**. Naquele caso as palavras relacionadas a ansiedade e suicídio também apareceram com frequência elevada.
+
+Ainda no contexto de bigramas há de se mencionar as redes de palavras. As redes de palavras são dispositivos visuais que auxiliam na compreensão da base de dados e dos sentimentos envolvidos.
 
 ```{r message=FALSE,results='hide',echo=TRUE}
 
@@ -488,8 +470,9 @@ depre_top_terms %>%
   mutate(term = reorder(term, beta)) %>%
   ggplot(aes(term, beta, fill = factor(topic))) +
   geom_col(show.legend = FALSE) +
-  xlab("termo") +
   facet_wrap(~ topic, scales = "free") +
+  ylab(expression(beta))+
+  xlab("Termo")+
   coord_flip()
 ```
 
