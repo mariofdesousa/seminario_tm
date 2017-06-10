@@ -438,6 +438,8 @@ word_cors %>%
 
 ## Análise de tópicos
 
+Nesta etapa será realizada uma análise de tópicos para verificar se o método LDA é capaz de encontrar algum agrupar os tweets de alguma forma. Na análise, cada usuário do Twitter será visto como o "documento" do qual o texto faz parte. Para isso, criamos um banco de dados onde as palavras e suas frequências são agrupadas por usuários, identificados pelo $\texttt{screenName}$. Adicionalmente, será feita a suposição de que os textos fazem parte de dois grupos desconhecidos e através da função $\texttt{LDA}$ do pacote $\texttt{topicmodels}$, serão obtidas as probabilidades de cada palavra e de cada usuário (documento) pertencer a cada um dos grupos, que serão identificados pelos números 1 e 2.
+
 ```{r message=FALSE,results='hide',echo=TRUE}
 if("topicmodels" %in% rownames(installed.packages())==FALSE)
 {install.packages("topicmodels")};library(topicmodels)
@@ -462,7 +464,7 @@ depre_topics <- tidy(depre_lda, matrix = "beta")
 # a cada um dos tópicos
 depre_top_terms <- depre_topics %>%
   group_by(topic) %>%
-  top_n(10, beta) %>%
+  top_n(5, beta) %>%
   ungroup() %>%
   arrange(topic, -beta)
 # gerando o gráfico
@@ -476,6 +478,8 @@ depre_top_terms %>%
   coord_flip()
 ```
 
+Após o método LDA ser aplicado, o índice $\texttt{beta}$ fornece a probabilidade de cada palavra pertencer a um dos grupos. Durante a análise, notamos que não parece haver grupos distintos bem definidos nos tweets analisados, sendo os grupos 1 e 2 bastante similiras e com várias palavras em comum. Tal resultados também foi verificado quando se connsidera números maiores ($k$) de grupos desconhecidos. No gráfico acima são apresentadas para cada grupo identificado pelo LDA as palavras que possuem as maiores de $\texttt{beta}$. Apesar dos grupos 1 e 2 serem bastante parecidos, podemos observar que o primeiro grupo parece estar mais relacionado com o estado "depressed", enquanto no segundo grupo tem-se uma ênfase maior no sentimento "depression".
+
 ```{r message=FALSE,echo=TRUE}
 # Aqui calculamos a probabilidade de cada pessoa escrever sobre
 # cada um dos tópicos
@@ -485,23 +489,29 @@ depre_topics_id %>% group_by(topic) %>%
 
 # Aqui analisamos algumas das pessoas com as maiores probabilidades de 
 # escrever sobre algum dos tópicos
-exemplo <- tweets.df %>% filter(screenName == "_Depressed_Zuka") %>%
-  select(text)
-exemplo$text[15]
 
-exemplo <- tweets.df %>% filter(screenName == "Quixotitron_4") %>%
+# Exemplo 1
+exemplo1 <- tweets.df %>% filter(screenName == "_Depressed_Zuka") %>%
   select(text)
-exemplo$text[1]
+exemplo1$text[15]
 
-exemplo <- tweets.df %>% filter(screenName == "RF_NYC_2010") %>%
+# Exemplo 2
+exemplo2 <- tweets.df %>% filter(screenName == "Quixotitron_4") %>%
   select(text)
-exemplo$text[5]
+exemplo2$text[1]
 
-exemplo <- tweets.df %>% filter(screenName == "DepressionRoots") %>%
+# Exemplo 3
+exemplo3 <- tweets.df %>% filter(screenName == "RF_NYC_2010") %>%
   select(text)
-exemplo$text[2]
+exemplo3$text[5]
+
+# Exemplo 4
+exemplo4 <- tweets.df %>% filter(screenName == "DepressionRoots") %>%
+  select(text)
+exemplo4$text[2]
 ```
 
+Como mencionado, pelo LDA também podemos estimar uma probabilidade que cada usuário tem de pertencer a cada um dos grupos. De maneira similar como foi feito para as palavras, no código anterior identificamos dentro dos grupos 1 e 2 quais pessoas tinham as maiores probabilidades, que é dada pelo índice $\texttt{gamma}$. Acima são mostrados alguns textos dos usuários identificados pelo LDA, onde podemos ver que alguns dos textos parecem ser provenientes de pessoas com um nível expressivo de descontentamento ou tristeza, como os exemplos 1 e 3. No exemplo 2 temos um exemplo onde o usuário escreve diversos trechos relacionados ao livro Dom Quixote de Miguel de Cervantes, onde seus textos podem ter algum grau de tristeza mas não necessariamente indicar que a pessoa tenha depressão. No exemplo 4, o usuário escreve sobre depressão, o que pode explicar o fato dele ser incluído no grupo sobre o sentimento "depression". Em geral, notamos que o método LDA apresenta dificuldade em encontrar grupos dentro dos tweets analisados, mas que a medida de probabilidade para cada pessoa ainda pode fornecer um indicativo se cada pessoa está apresentando textos que se destacam dos demais, o que poderia ser um possível indício de sentimentos negativos que estajam relacionados ao estado de depressão.
 
 # Referências bibliográficas
 
