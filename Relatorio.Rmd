@@ -20,6 +20,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Metodologia
 
+## Contagem e frequência de palavras
+
+Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoções expressos em texto, e para tal, será preciso criar métricas para contabilização dos mesmos.
+Sabemos que com a popularização da internet, um enorme volume dados é gerado a cada minuto. Segundo GOMES (2013), o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (TAN, 1999). Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência, percentual, das palavras e utilizar o pacote ggplot para elaboração de um histograma para visualização. Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras, que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto: quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquico com a contagem das palavras, devemos intalar um arquivo Word.cloud
+
+
+
 ## Descrição dos dados
 A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com os métodos  $\texttt{tidy}$ e $\texttt{tm}$.
 
@@ -67,9 +74,7 @@ Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos pal
 
 # Resultados e discussões
 
-## Análise de sentimentos
-
-## Análise de sentimentos
+## Contagem de palavras
 
 ```{r, message=FALSE,results='hide',echo=TRUE}
 
@@ -94,6 +99,9 @@ if("twitteR" %in% rownames(installed.packages())==FALSE)
 if("tibble" %in% rownames(installed.packages())==FALSE)
 {install.packages("tibble")};library(tibble)
 
+if("wordcloud" %in% rownames(installed.packages())==FALSE)
+{install.packages("wordcloud")};library(wordcloud)
+
 udemytweets <-readRDS("depression_tweets_final.gzip")
 
 tweets.df <- twListToDF(udemytweets) ##CALMA QUE VAI DEMORAR
@@ -104,7 +112,107 @@ tweets_tidy_df <- as_tibble(tweets.df)
 replace_reg <- "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
 unnest_reg  <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
 
-data("stop_words")
+### Palavras retiradas para contagem
+mystopwords_count <- c(stop_words$word,"depression","depressive","depressed",
+                  "im","wcw","ur","depressed.","depression.","depressed,",
+                  "depression,","me,","lol","#depression","me.","wow",
+                  "depressed?","idk","ppl","bc","dont","lot","it.","anxiety,",
+                  "her,","af","y'all","rn")
+
+### Limpando a base para a contagem de palavras
+tweets_tidy_count <- tweets_tidy_df %>% 
+  filter(!str_detect(text, "^RT"),
+         text != "im",
+         text != "ur",
+         text != "af",
+         text != "wcw",
+         text != "shes",
+         text != "booktweeter0",
+         text != "bktwr",
+         !str_detect(text, "[0-9]"),
+         !str_detect(text, ":"),
+         !str_detect(text, "textless")) %>%
+  mutate(text = str_replace_all(text, replace_reg, "")) %>%
+  unnest_tokens(word, text, token = "regex") %>%
+  filter(!word %in% mystopwords_count,
+         str_detect(word, "[a-z]")) %>%
+  anti_join(stop_words)%>%
+  count(word,sort=TRUE)%>%
+  filter(n > 100 & n < 500) %>%
+  mutate(word = reorder(word, n)) 
+
+  ggplot(tweets_tidy_count,aes(word, n)) +
+  geom_col() +
+  xlab("Contagem") +
+  coord_flip()
+```
+
+**Interpretar**
+
+```{r, message=FALSE,results='hide',echo=TRUE}
+
+tweets_tidy_df %>% 
+  filter(!str_detect(text, "^RT"),
+         text != "im",
+         text != "ur",
+         text != "af",
+         text != "wcw",
+         text != "shes",
+         text != "booktweeter0",
+         text != "bktwr",
+         !str_detect(text, "[0-9]"),
+         !str_detect(text, ":"),
+         !str_detect(text, "textless")) %>%
+  mutate(text = str_replace_all(text, replace_reg, "")) %>%
+  unnest_tokens(word, text, token = "regex") %>%
+  filter(!word %in% mystopwords_count,
+         str_detect(word, "[a-z]")) %>%
+  anti_join(stop_words)%>%
+  count(word,sort=TRUE)%>%
+  mutate(word = reorder(word, n)) %>%
+  with(wordcloud(word, n, max.words = 100))
+```
+
+**Interpretar**
+
+```{r, message=FALSE,results='hide',echo=TRUE,warning=FALSE}
+
+### Histograma da proporcao de palavras
+### Palavras retiradas do histograma
+
+mystopwords_hist <- c(stop_words$word,"im","wcw","ur",
+                         "depressed.","depression.","depressed,")
+tweets_tidy_df %>% 
+    filter(!str_detect(text, "^RT"),
+           text != "im",
+           text != "ur",
+           text != "af",
+           text != "wcw",
+           text != "shes",
+           text != "booktweeter0",
+           text != "bktwr",
+           !str_detect(text, "[0-9]"),
+           !str_detect(text, ":"),
+           !str_detect(text, "textless")) %>%
+    mutate(text = str_replace_all(text, replace_reg, "")) %>%
+    unnest_tokens(word, text, token = "regex") %>%
+    filter(!word %in% mystopwords_hist,
+           str_detect(word, "[a-z]")) %>%
+    anti_join(stop_words)%>%
+    count(word,sort=TRUE)%>%
+    mutate(word = reorder(word, n)) %>%
+ggplot(aes(n/sum(n))) +
+  geom_histogram(show.legend = FALSE) +
+  xlim(NA, 0.0009) +
+  xlab("Proporção")+
+  ylab("Contagem")
+```
+
+**interpretar**
+
+## Análise de sentimentos
+
+```{r, message=FALSE,results='hide',echo=TRUE}
 
 mystopwords <- c(stop_words$word)
 
