@@ -1,0 +1,113 @@
+---
+title: "WordCloud"
+author: "Rawicz"
+date: "12 de junho de 2017"
+output: pdf_document
+---
+
+Um WordCloud ? feito com as palavras mais utilizadas em um determinado texto ou documento, de forma com que fique visual e chamativo para as palavras mais importantes.
+
+Para a nossa base de dados foram utilizados tweets da plataforma social "twitter", sendo que foram baixados 30.000(trinta mil) tweets, tendo a partir deles palavras relacionadas ? depress?o, sendo todas no idioma ingl?s, como "depression" e "anxiety".
+
+
+Dado isso foi feita uma separa??o dos dados na linguagem R e os dados foram transformados em "Data Frame" para manipula??o. Depois fazemos todas as limpezas necess?rias para que o texto fique uniforme, como deixar todas as letras min?sculas, remover os nomes de usu?rio, tirar pontua??o, links e espa?os em branco desnecess?rios, e por fim, n?meros e palavras desnecess?rias, como a identifica??o do aparelho pelo qual foi enviado o tweet.
+
+```{r, include=FALSE}
+
+library(twitteR)
+library(httr)
+library(tm)
+library(wordcloud)
+library(SnowballC)
+library(dendextend)
+library(qdap)
+
+
+tweets <- readRDS("depression_tweets_final.gzip")
+
+tweets.text <- twListToDF(tweets)
+
+tweets.text <- as.data.table(tweets.text[1])
+
+#convert all text to lower case
+tweets.text <- tolower(tweets.text)
+
+# Replace blank space ("rt")
+tweets.text <- gsub("rt", "", tweets.text)
+
+# Replace @UserName
+tweets.text <- gsub("@\\w+", "", tweets.text)
+
+# Remove punctuation
+tweets.text <- gsub("[[:punct:]]", "", tweets.text)
+
+# Remove links
+tweets.text <- gsub("http\\w+", "", tweets.text)
+
+# Remove tabs
+tweets.text <- gsub("[ |\t]{2,}", "", tweets.text)
+
+# Remove blank spaces at the beginning
+tweets.text <- gsub("^ ", "", tweets.text)
+
+# Remove blank spaces at the end
+tweets.text <- gsub(" $", "", tweets.text)
+tweets.text <- gsub("href", "", tweets.text)
+tweets.text <- gsub("relnofollowtwitter", "", tweets.text)
+tweets.text <- gsub("iphonea", "", tweets.text)
+tweets.text <- gsub("androida", "", tweets.text)
+tweets.text <- gsub("false", "", tweets.text)
+tweets.text <- gsub("wcw", "", tweets.text)
+tweets.text <- gsub("ball", "", tweets.text)
+tweets.text <- gsub("around", "", tweets.text)
+tweets.text <- gsub("still", "", tweets.text)
+tweets.text <- gsub("goes", "", tweets.text)
+
+
+bpcorpus <- Corpus(VectorSource(tweets.text))
+bpcorpus <- tm_map(bpcorpus, function(x) removeWords(x, stopwords()))
+bpcorpus <- tm_map(bpcorpus, removeNumbers)
+```
+
+Existe um problema ao rodar o WordCloud aqui:a palavra "depression" aparece muito repetida em palavras como "depressed", "depressive", ent?o vamos substituir.
+
+```{r, include=FALSE}
+tweets.text <- gsub("depressed", "depress", tweets.text)
+tweets.text <- gsub("depressive", "depress", tweets.text)
+tweets.text <- gsub("depression", "depress", tweets.text)
+tweets.text <- gsub("depressednjonah", "depress", tweets.text)
+
+```
+
+
+A partir da? ? s? utilizar o comando do WordCloud para ver como ele funciona:
+
+```{r, echo=TRUE}
+wordcloud(bpcorpus,min.freq = 300, scale=c(8,0.1),colors=brewer.pal(8, "Dark2"),  
+          random.color= TRUE, random.order = FALSE, max.words = 70)
+
+```
+
+
+Mas ? importante mostrar como ele funciona, o pacote "WordCloud" pega as palavras com as maiores frequ?ncias nos documentos e as coloca na maneira que miniminiza os espa?os em branco de acordo com os tamanhos das palavras, que ? proporcional ? frequ?ncia que elas aparecem. Al?m disso, o usu?rio pode escolher manualmente as palavras e as frequ?ncias.
+
+
+# Termos Frequentes
+
+
+Os termos frequentes s?o uma parte importante de uma an?lise textual. No caso da nossa base de dados j? trabalhada, ? bem simples, no caso do pacote "tm", ? s? transformar a base em corpus em uma TermDocumentMatrix e depois executar os comandos:
+
+
+```{r, echo=TRUE}
+bptdm <- TermDocumentMatrix(bpcorpus)
+
+freq <- findFreqTerms(bptdm, lowfreq = 100)
+``` 
+
+```{r, echo=TRUE}
+head(freq, 45)
+
+```
+
+Essas s?o as 45 palavras mais frequentes do texto.
+
