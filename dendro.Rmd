@@ -1,0 +1,124 @@
+---
+title: "Dendrograma"
+author: "Rafael Cattan"
+date: "9 de junho de 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+##Introdução à metodologia de dendrogramas
+
+De acordo com o dicionário Merriam-Webster[^1], um dendograma se define como um diagrama em árvore que representa uma hierarquia de grupos de objetos, baseada em sua similiaridade ou características em comum.
+
+No caso da análise textual, as palavras são os elementos que compõe os grupos do diagrama. A distância medida entre elas, por sua vez, depende da frequência de ocorrência de cada palavra. Definidos os grupos e sua respectiva hierarquia, o objetivo do dendrograma é facilitar a associação entre as palavras a fim de se extrair informações relevantes sobre o texto\cite{Text Mining in Practice with R
+Ted Kwartler}.
+
+Diversos métodos podem ser utilizados para o agrupamento de objetos. O dendrograma é o resultado em diagrama de um método aglomerativo hierárquico. Neste método, cada objeto da análise é inicialmente considerado como um grupo individual. Em seguida, objetos com pouco distância entre si são aglomerados em grupos maiores. Estes  grupos maiores, por seu turno, são reagrupados, novamente segundo a distância entre seus objetos. Ao final do processo, todos os grupos se aglomeram em apenas um. A vizualização deste processo é o próprio dendrograma \cite{http://www.stewartschultz.com/statistics/books/Cambridge%20Dictionary%20Statistics%204th.pdf}.
+
+
+No R, existem seis métodos de mensuração da distância entre os objetos, no caso, a frequência das palavras e oito métodos de aglomeração. Dentre os métodos de cálculo da distância, podemos relevar
+
+
+1) **Euclidiana**: o método padrão de distância entre vetores 
+$$\sum{(x_i- y_i^2)}$$
+
+2) **Máximos**: mede a distância máxima entre componentes de dois vetores:$$\max{x_i,y_i}$$
+
+3) **Manhattan**: mede a distância absoluta entre dois vetores $$[{x_i, y_i}]$$
+
+4) **Canberra**: definido pela seguinte expressão, onde termos nulos do denominador são excluídos da amostra: $$\sum\frac{(|x_i - y_i|}{ |x_i + y_i|}).$$ 
+
+5) **Binário**: A distância é a proporção de vetores considerados binários, (*bits*), em que apenas um dos vetores está presente dentre aqueles em que apenas os vetores 1 estão incluídos.
+
+6) **Minkowski**: a p-ésima raíz da soma dos das diferenças dos componentes elevada à p-ésima potência. $$\sqrt[p_{th}]{(x_i-y_i)^p_{th} }$$
+
+
+Com relação à aglomeração, em cada estágio do processo a distância entre os grupos é recalculada pelo algorítimo de Lance-Willians \cite(https://pdfs.semanticscholar.org/7c16/8b8262acf2ec40a971604f273462136f4835.pdf), em acordo com o método de agrupamento selecionado. Os métodos implementados no R, segundo o pacote *dentextend*, são:"Ward","Single","Median","Centroid" e "Complete". 
+
+Á título de ilustração, na próxima sessão se demonstrará a diferença entre os métodos, assim como sua aplicação para a análise de dados abertos do aplicativo Twitter.
+
+
+## Construindo o Dendrograma
+
+O primeiro passo para a construção do dendrograma para análise saúde mental a partir do Twitter, foi a "limpeza" do conjunto textual selecionado. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras, que recebe o nome de *"stopwords"*, ao mesmo tempo que não acrescentam valor semantico são muito frequentes por serem compostas por artigos, preposições e pronomes. No caso em questão, utilizou-se o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma \cite{http://www.ijcscn.com/Documents/Volumes/vol5issue1/ijcscn2015050102.pdf}.
+
+
+
+Após a eliminação destas palavras, contruiu-se uma matriz de frequência das palavras e analisou-se as 50 palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. Notou-se que algumas palavras extras poderiam ser removidas como abreviações e gírias que as "stopwords" predefinidas não contemplavam\footnote[^2].
+
+O passo seguinte foi a análise gráfica dos termos mais frequentes, a fim de se avaliar a frequências das palavras de forma relativa. O  abaixo representa as 50 palavras mais frequentes da base de dados, realizadas a limpeza previamente definida.
+
+
+```{r}
+
+mat_freq <- wfm(tidy_tweets$word)
+
+mat_freq <- as.matrix(mat_freq) #matriz de frequências
+
+term_freq <-rowSums(mat_freq)
+
+term_freq <-sort(term_freq,decreasing = T) # lista com as top palavras em orderm decrescente
+
+
+barplot(term_freq[1:50],col="tan",las=2) #vizualização das palavras mais frequentes
+
+
+```
+
+
+Nota-se que as expressões *"depressed"*, *"depression"* e *"depressive"* são as mais frequentes, aparecendo, 5007, 3936 e 1784 vezes respectivamente. Este resultado é o esperado, visto que foram justamente as três palavras utilizadas como filtro para a seleção dos tweets que compõe a base de dados do trabalho. A fim de se analisar de forma mais precisa a frequência deste subconjunto de dados, optou-se por retirar estas três observações a fim de tornar a escala de frequência da demais palavras mais clara, como pode-se observar abaixo.
+
+
+
+```{r, echo=FALSE}
+
+
+bardepless  <- barplot(term_freq[1:50],col="tan",las=2) #vizualização das palavras mais frequentes
+
+
+```
+
+
+Nota-se que aproximadamente as 20 primeiras palavras possuem um nivel de diferença maior com relação às trinta ultimas palavras. Para uma análise de dendrograma, esta diferença na frequência é de grande signigicância à medida em que os grupos são formados a partir das mesmas. Além disso, nota-se um grande número de palavras que expressam sentimentos, o que revela um padrão dos textos da base selecionada que se relaciona à saúde mental.
+
+Isto posto o próximo passo, foi a construção do dendrograma, com as cinquenta palavras mais frequentes, como exposto abaixo.
+
+```{r, echo=FALSE}
+
+
+plot(dend1,ylab = "Distância",las=0)
+
+
+```
+
+
+O método selecionado de cálculo das distâncias entre as observações, no caso a distância entre as frequências, foi o euclidiano. Nota-se que há dois grandes grupos de palavras, que se subdividem em pelo menos mais dois grandes grupos, formando os chamados *"clusters"*. Além disso, pode-se notar que, como esperado, há um grande número de observações na mesma altura do dendrograma, que representam as aproximadamente trinta palavras com frequência semelhantes. Uma das vantagens da construção do dendrograma é o fato de que não é necesessário se definir, a priori, o número de grupos que o conjunto de palavras possui. A partir da análise desde dendrograma, optou-se por definir de forma a priori, o número de clusters, de forma a tornar possível sua vizualização de forma mais clara. O segundo dendrograma abaixo, ilustra o caso com oito grupos:
+
+```{r, echo=FALSE}
+
+par(bg="gray43")
+dend4.2 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>% 
+  set("branches_k_color", value=c("aquamarine2", "chocolate1","darkcyan","brown2","orange1","purple1","palegreen3","royalblue1") ,k=8) %>%
+  set("labels_colors",k=8, value=c("aquamarine2", "chocolate1","darkcyan","brown2","orange1","purple1","palegreen3","royalblue1") ) %>% set("labels_cex", c(.5,.5)) %>%  
+  set("nodes_pch", 1,k=8)
+
+plot(dend4.2)
+
+
+
+```
+
+
+# comparar métodos de distância
+
+
+
+
+[^1]: ver https://www.merriam-webster.com/dictionary/dendrogram
+
+
+[^2]: As palavras extras exluídas das análise foram: "https", "im" "ur", "lol", "bktwtr", "booktweeter".
