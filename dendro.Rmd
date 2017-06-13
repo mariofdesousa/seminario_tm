@@ -7,6 +7,278 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+
+require(tibble)
+require(graphics); 
+
+require(utils)
+
+library(dendextend)
+
+library(qdap)
+
+library(tm)
+
+library(readr)
+
+library(tidytext)
+
+library(twitteR)
+
+library(dplyr)
+library(stringr)
+library(dplyr)
+library(tidytext)
+library(ggplot2)
+library(tidyr)
+library(stringr)
+library(readr)
+library(tibble)
+library(twitteR)
+library(qdap)
+
+#lendo base atualizada
+
+udemytweets  <- readRDS("C:/R_2/depression_tweets_final")
+
+
+
+#transformando em DF
+
+udemytdm <- twListToDF(udemytweets) # A BASE EM DF
+
+
+
+
+
+#transformando em tibble
+
+tweets_tidy_df <- as_tibble(udemytdm) # A BASE EM tbl
+
+
+
+
+
+#limpando (1)
+
+replace_reg <- "https://t.co/[A-Za-z\\d]+%7Chttp://[A-Za-z\\d]+%7C&amp;https%7C&lt;%7C&gt;%7CRT%7Chttps"
+unnest_reg <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
+
+
+mystopwords <- c(stop_words$word, "lol","ur","bktwtr","booktweeter","im")
+
+
+
+
+
+
+# seleção de palavras extras
+
+#selects1 <- c("https","it","It","key","million","depressed","depression","depressive","im") #adicionando alguns elementos às stopwords
+
+#selects2 <- c("https","it","It","key","million")
+
+
+
+
+# stop totais usadas
+
+new_stops <-c(mystopwords,"lol","ur","bktwtr","booktweeter","im","https")
+
+
+new_stops2 <-c(mystopwords,"depression", "lol","ur","bktwtr","booktweeter","amp","im","https","depressed","depression","depressive","depression")
+
+
+tidy_tweets <- tweets_tidy_df%>% #novo nome da base
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_replace_all(text, replace_reg, "")) %>%
+  unnest_tokens(word, text, token = "regex", pattern = unnest_reg) %>%
+  filter(!word %in% new_stops2, #renovada
+         str_detect(word, "[a-z]"))
+
+
+
+
+
+
+
+# matriz de frequência de palavras
+
+mat_freq <- wfm(tidy_tweets$word)
+
+mat_freq <- as.matrix(mat_freq) #matriz de frequências
+
+term_freq <-rowSums(mat_freq)
+
+term_freq <-sort(term_freq,decreasing = T) # lista com as top palavras em orderm decrescente
+
+
+
+
+bardepless  <- barplot(term_freq[1:50],col="tan",las=2) #vizualização das palavras mais frequentes
+
+
+list(term_freq[1:20])
+
+
+
+
+
+
+#primeiro dendrograma 
+
+
+dend1 <- hclust((dist(term_freq[1:50],method="euclidean"))) #apenas 50 palavras mais frequentes
+
+
+plot(dend1,ylab = "Distância",las=0)
+
+
+
+
+
+
+
+
+# Dendro 2- redução de pelavras
+
+dend2 <- dist(term_freq[1:20]) %>% # data
+  
+  scale %>% # Scale the data
+  
+  dist %>% # calculate a distance matrix, 
+  
+  hclust(method="centroid") %>% # Hierarchical clustering 
+  
+  as.dendrogram # Turn the object into a dendrogram.
+
+  plot(dend2) #gráfico
+
+
+  
+  
+  
+  
+#####################3
+  
+  
+# vizualização completa de gráficos com função  
+  
+dend <- rep(0,length(hmethods))
+    
+hmethods <-c("ward.D", "ward.D2", "single", "complete", "average" , "mcquitty" , "median", "centroid" )
+  
+
+
+
+
+
+##fazer todos os gráficos e comparar ou fazer "Global Comparison of two (or more) dendrograms"
+
+for (i in 1:8){
+  
+  dend[i] <- hclust((dist(term_freq[1:50]))) %>%
+
+    par(mfrow=c(2,4))%>% # data
+    
+    scale %>% # Scale the data
+    
+    dist %>% # calculate a distance matrix, 
+    
+    hclust(method=c(hmethods[i])) %>% # Hierarchical clustering 
+    
+    as.dendrogram # Turn the object into a dendrogram.
+  
+  
+}
+
+
+
+
+  ##########
+
+
+
+
+
+
+#ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
+  
+
+
+#DENDRO 2 - adicionando cores a 5 clusters (observação visual)
+  
+  
+dend2 <- dist(term_freq[1:20]) %>% dist %>% hclust %>% as.dendrogram %>% 
+    
+  set("branches_k_color",k=5) %>%
+  
+  plot(main = "Dendrograma com 5 clusters",las=1)
+
+
+
+
+  
+
+
+#DENDRO 3 - adicionando cores a 5 clusters HORIZONTAL (observação visual)
+
+dend3 <- dist(term_freq[1:20]) %>% dist %>% hclust %>% as.dendrogram %>% 
+  
+  set("branches_k_color", k = 5)  %>% 
+                
+          set("labels_cex",.2) %>%
+  
+          hang.dendrogram(hang_height = -1)
+
+  plot(dend3, horiz = T)
+
+
+
+
+
+#DENDRO 4 - cores nos labels
+
+
+par(bg="gray75")
+dend4 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>% 
+  set("branches_k_color", k=4) %>%
+  set("labels_colors",k=4) %>% set("labels_cex", c(.5,.5)) %>%  
+  set("nodes_pch", 1)
+   
+
+plot(dend4)
+
+
+
+par(bg="gray43")
+dend4.2 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>% 
+  set("branches_k_color", value=c("aquamarine2", "chocolate1","darkcyan","brown2","orange1","purple1","palegreen3","royalblue1") ,k=8) %>%
+  set("labels_colors",k=8, value=c("aquamarine2", "chocolate1","darkcyan","brown2","orange1","purple1","palegreen3","royalblue1") ) %>% set("labels_cex", c(.5,.5)) %>%  
+  set("nodes_pch", 1,k=8)
+
+plot(dend4.2)
+
+
+
+#dendro 5 - radial - dar cores
+
+install.packages("ape")
+library(ape)
+
+
+dend5 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram
+  
+
+plot(as.phylo(dend5), type="fan")
+
+
+
+
+
+
+
 ```
 
 
@@ -55,6 +327,8 @@ O passo seguinte foi a análise gráfica dos termos mais frequentes, a fim de se
 
 ```{r}
 
+
+
 mat_freq <- wfm(tidy_tweets$word)
 
 mat_freq <- as.matrix(mat_freq) #matriz de frequências
@@ -101,7 +375,7 @@ O método selecionado de cálculo das distâncias entre as observações, no cas
 ```{r, echo=FALSE}
 
 par(bg="gray43")
-dend4.2 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>% 
+dend4.2 <- dist(term_freq[1:50]) %>% dist %>% scale %>%hclust %>% as.dendrogram %>% 
   set("branches_k_color", value=c("aquamarine2", "chocolate1","darkcyan","brown2","orange1","purple1","palegreen3","royalblue1") ,k=8) %>%
   set("labels_colors",k=8, value=c("aquamarine2", "chocolate1","darkcyan","brown2","orange1","purple1","palegreen3","royalblue1") ) %>% set("labels_cex", c(.5,.5)) %>%  
   set("nodes_pch", 1,k=8)
@@ -113,9 +387,30 @@ plot(dend4.2)
 ```
 
 
-# comparar métodos de distância
+### comparação de métodos de distância
+
+Como já foi salientado, existem diferentes métodos de agrupamento das palavras. À título de comparação entre os métodos, o gráfico abaixo nos ajuda a visualizar a correlação entre os métodos para que, em seguida, se possa analisar os dendrogramas resultantes. 
 
 
+```{r, echo=FALSE}
+
+library(corrplot)
+corrplot(cor.dendlist(dend1234), "pie", "lower")
+
+```
+
+Como se pode notar, a diferença de clusterização resultante dos diferentes métodos (*Complete, Single, Average e Centroid*) é bem pequena, sendo a mais significativa a diferença entre o método *"Complete"* e o *"Single"*. Comparando, portanto, os dendrogramas dos dois tipos podemos perceber que, de fato, há grande similaridade entre os grupos formados, como se nota no dendrogramas abaixo:
+
+
+```{r, echo=FALSE}
+
+par(mfrow = c(1,2),bg="gray43")
+plot(dend1, main = "Complete")
+plot(dend2, main = "Single" )
+
+```
+
+Comparando os dois modelos, podemos perceber que o método *"Single"* possui mais grupos o que indica que o grupamento é mais sensível à posição de distância entre as frequências.
 
 
 [^1]: ver https://www.merriam-webster.com/dictionary/dendrogram
