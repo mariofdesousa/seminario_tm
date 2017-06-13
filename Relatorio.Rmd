@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Contagem e frequência de palavras
 
 Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoções expressos em texto, e para tal, será preciso criar métricas para contabilização dos mesmos.
-Sabemos que com a popularização da internet, um enorme volume dados é gerado a cada minuto. Segundo GOMES (2013), o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (TAN, 1999). Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência, percentual, das palavras e utilizar o pacote ggplot para elaboração de um histograma para visualização. Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras, que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto: quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquico com a contagem das palavras, devemos intalar um arquivo Word.cloud
+Sabemos que com a popularização da internet, um enorme volume dados é gerado a cada minuto. Segundo @gomes2013text, o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (vide @Tan99textmining). Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência, percentual, das palavras e utilizar o pacote ggplot para elaboração de um histograma para visualização. Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras, que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto: quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquico com a contagem das palavras, devemos intalar um arquivo Word.cloud
 
 
 
@@ -112,6 +112,40 @@ tweets_tidy_df <- as_tibble(tweets.df)
 replace_reg <- "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
 unnest_reg  <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
 
+### Histograma da proporcao de palavras
+### Palavras retiradas do histograma
+
+mystopwords_hist <- c(stop_words$word,"im","wcw","ur",
+                         "depressed.","depression.","depressed,")
+tweets_tidy_df %>% 
+    filter(!str_detect(text, "^RT"),
+           text != "im",
+           text != "ur",
+           text != "af",
+           text != "wcw",
+           text != "shes",
+           text != "booktweeter0",
+           text != "bktwr",
+           !str_detect(text, "[0-9]"),
+           !str_detect(text, ":"),
+           !str_detect(text, "textless")) %>%
+    mutate(text = str_replace_all(text, replace_reg, "")) %>%
+    unnest_tokens(word, text, token = "regex") %>%
+    filter(!word %in% mystopwords_hist,
+           str_detect(word, "[a-z]")) %>%
+    anti_join(stop_words)%>%
+    count(word,sort=TRUE)%>%
+    mutate(word = reorder(word, n)) %>%
+ggplot(aes(n/sum(n))) +
+  geom_histogram(show.legend = FALSE) +
+  xlim(NA, 0.0009) +
+  xlab("Proporção")+
+  ylab("Contagem")
+```
+
+Para iniciar a análise dos textos sobre depressão provenientes do Twitter faremos uma análise sobre a frequência das palavras. Esse tipo de análise permite identificar quais são os termos mais utilizados pelas pessoas nesse banco de dados, fornecendo uma caracterização inicial do que poderemos encontrar nas análises seguintes. No gráfico acima é apresentado um histograma da frequência de cada termo presente nos dados, com exceção de algumas palavras muito comuns (im, ur, etc.) ou que não temos interesse de incluir nessa análise (depression, depressive, depression). Podemos observar que a frequência possui uma distribuição bastante assimétrica, com a grande maioria das palavras aparecendo em um proporção baixa, enquanto algumas palavras que são mais comuns ficam evidenciadas na cauda do histograma.
+
+```{r, message=FALSE,results='hide',echo=TRUE,warning=FALSE}
 ### Palavras retiradas para contagem
 mystopwords_count <- c(stop_words$word,"depression","depressive","depressed",
                   "im","wcw","ur","depressed.","depression.","depressed,",
@@ -147,7 +181,7 @@ tweets_tidy_count <- tweets_tidy_df %>%
   coord_flip()
 ```
 
-**Interpretar**
+Como observado no histograma anterior, um pequeno número de palavras possui uma frequência bem maior que as demais, e estas palavras podem fornecer informações sobre o conteúdo dos dados. No gráfico acima, apresentamos as palavras que aparecem com maior frequência nos tweets analisados, com exceção de alguns termos. Podemos observar que boa parte das palavras estão relacionadas à sentimentos, indicando que as palavras relacionadas à depressão podem estar associadas com termos referentes à como as pessoas se sentem. De fato, a palavra mais frequente dentre os termos associados é "feel".
 
 ```{r, message=FALSE,results='hide',echo=TRUE}
 
@@ -174,41 +208,6 @@ tweets_tidy_df %>%
 ```
 
 **Interpretar**
-
-```{r, message=FALSE,results='hide',echo=TRUE,warning=FALSE}
-
-### Histograma da proporcao de palavras
-### Palavras retiradas do histograma
-
-mystopwords_hist <- c(stop_words$word,"im","wcw","ur",
-                         "depressed.","depression.","depressed,")
-tweets_tidy_df %>% 
-    filter(!str_detect(text, "^RT"),
-           text != "im",
-           text != "ur",
-           text != "af",
-           text != "wcw",
-           text != "shes",
-           text != "booktweeter0",
-           text != "bktwr",
-           !str_detect(text, "[0-9]"),
-           !str_detect(text, ":"),
-           !str_detect(text, "textless")) %>%
-    mutate(text = str_replace_all(text, replace_reg, "")) %>%
-    unnest_tokens(word, text, token = "regex") %>%
-    filter(!word %in% mystopwords_hist,
-           str_detect(word, "[a-z]")) %>%
-    anti_join(stop_words)%>%
-    count(word,sort=TRUE)%>%
-    mutate(word = reorder(word, n)) %>%
-ggplot(aes(n/sum(n))) +
-  geom_histogram(show.legend = FALSE) +
-  xlim(NA, 0.0009) +
-  xlab("Proporção")+
-  ylab("Contagem")
-```
-
-**interpretar**
 
 ## Análise de sentimentos
 
