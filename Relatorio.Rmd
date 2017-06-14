@@ -23,9 +23,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Contagem e frequência de palavras
 
 Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoções expressos em texto, e para tal, será preciso criar métricas para contabilização dos mesmos.
-Sabemos que com a popularização da internet, um enorme volume dados é gerado a cada minuto. Segundo @gomes2013text, o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (vide @Tan99textmining). Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência, percentual, das palavras e utilizar o pacote ggplot para elaboração de um histograma para visualização. Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras, que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto: quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquico com a contagem das palavras, devemos intalar um arquivo Word.cloud
+Sabemos que com a popularização da internet, um enorme volume dados é gerado a cada minuto. Segundo GOMES (2013), o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (TAN, 1999). Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência, percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras, que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto: quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquico com a contagem das palavras, devemos intalar um arquivo Word.cloud
+
+### Núvem de palavras
+
+Um WordCloud é feito com as palavras mais utilizadas em um determinado texto ou documento, de forma com que fique visual e chamativo para as palavras mais importantes.
+
+Para a nossa base de dados foram utilizados tweets da plataforma social "twitter", sendo que foram baixados 30.000(trinta mil) tweets, tendo a partir deles palavras relacionadas a depressão, sendo todas no idioma inglês, como "depression" e "anxiety".
 
 
+Dado isso foi feita uma separação dos dados na linguagem R e os dados foram transformados em "Data Frame" para manipulação. Depois fazemos todas as limpezas necessárias para que o texto fique uniforme, como deixar todas as letras minísculas, remover os nomes de usuário, tirar pontuação, links e espaços em branco desnecessários, e por fim, números e palavras desnecessárias, como a identificação do aparelho pelo qual foi enviado o tweet.
 
 ## Descrição dos dados
 A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com os métodos  $\texttt{tidy}$ e $\texttt{tm}$.
@@ -72,6 +79,47 @@ Geralmente os dicionários são elaborados pelos próprios autores com auxílio 
 
 Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a tais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos ao longo do texto. Note que a quantidade de linhas que serãoagrupadas depende do tipo e do tamanho do texto que está sendo análisado. Ainda utilizando o dicionário **bing**, apresentamos uma núvem de palavras de sentimentos, isto é, uma núvem de palavras com distinção entre palavras positivas e negativas. Prosseguimos a análise de sentimentos comparando os três dicionários, de modo a observar se há alguma discrepância em algum deles. 
 
+## Dendrogramas
+
+De acordo com o dicionário Merriam-Webster[^1], um dendograma se define como um diagrama em árvore que representa uma hierarquia de grupos de objetos, baseada em sua similiaridade ou características em comum.
+
+No caso da análise textual, as palavras são os elementos que compõe os grupos do diagrama. A distância medida entre elas, por sua vez, depende da frequência de ocorrência de cada palavra. Definidos os grupos e sua respectiva hierarquia, o objetivo do dendrograma é facilitar a associação entre as palavras a fim de se extrair informações relevantes sobre o texto @t17.
+
+Diversos métodos podem ser utilizados para o agrupamento de objetos. O dendrograma é o resultado em diagrama de um método aglomerativo hierárquico. Neste método, cada objeto da análise é inicialmente considerado como um grupo individual. Em seguida, objetos com pouco distância entre si são aglomerados em grupos maiores. Estes  grupos maiores, por seu turno, são reagrupados, novamente segundo a distância entre seus objetos. Ao final do processo, todos os grupos se aglomeram em apenas um. A vizualização deste processo é o próprio dendrograma \cite{http://www.stewartschultz.com/statistics/books/Cambridge%20Dictionary%20Statistics%204th.pdf}.
+
+
+No R, existem seis métodos de mensuração da distância entre os objetos, no caso, a frequência das palavras e oito métodos de aglomeração. Dentre os métodos de cálculo da distância, podemos relevar
+
+
+1) **Euclidiana**: o método padrão de distância entre vetores 
+$$\sum{(x_i- y_i^2)}$$
+
+2) **Máximos**: mede a distância máxima entre componentes de dois vetores:$$\max{x_i,y_i}$$
+
+3) **Manhattan**: mede a distância absoluta entre dois vetores $$[{x_i, y_i}]$$
+
+4) **Canberra**: definido pela seguinte expressão, onde termos nulos do denominador são excluídos da amostra: $$\sum\frac{(|x_i - y_i|}{ |x_i + y_i|}).$$ 
+
+5) **Binário**: A distância é a proporção de vetores considerados binários, (*bits*), em que apenas um dos vetores está presente dentre aqueles em que apenas os vetores 1 estão incluídos.
+
+6) **Minkowski**: a p-ésima raíz da soma dos das diferenças dos componentes elevada à p-ésima potência. $$\sqrt[p_{th}]{(x_i-y_i)^p_{th} }$$
+
+
+Com relação à aglomeração, em cada estágio do processo a distância entre os grupos é recalculada pelo algorítimo de Lance-Willians \cite(https://pdfs.semanticscholar.org/7c16/8b8262acf2ec40a971604f273462136f4835.pdf), em acordo com o método de agrupamento selecionado. Os métodos implementados no R, segundo o pacote $\texttt{dentextend}$, são:"Ward","Single","Median","Centroid" e "Complete". 
+
+Á título de ilustração, na próxima sessão se demonstrará a diferença entre os métodos, assim como sua aplicação para a análise de dados abertos do aplicativo Twitter.
+
+
+### Construindo o Dendrograma
+
+O primeiro passo para a construção do dendrograma para análise saúde mental a partir do Twitter, foi a "limpeza" do conjunto textual selecionado. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras, que recebe o nome de *stopwords*, ao mesmo tempo que não acrescentam valor semantico são muito frequentes por serem compostas por artigos, preposições e pronomes. No caso em questão, utilizou-se o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma @v15
+
+
+
+Após a eliminação destas palavras, contruiu-se uma matriz de frequência das palavras e analisou-se as 50 palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. Notou-se que algumas palavras extras poderiam ser removidas como abreviações e gírias que as "stopwords" predefinidas não contemplavam\footnote[^2].
+
+O passo seguinte foi a análise gráfica dos termos mais frequentes, a fim de se avaliar a frequências das palavras de forma relativa. O  abaixo representa as 50 palavras mais frequentes da base de dados, realizadas a limpeza previamente definida.
+
 # Resultados e discussões
 
 ## Contagem de palavras
@@ -103,49 +151,14 @@ if("wordcloud" %in% rownames(installed.packages())==FALSE)
 {install.packages("wordcloud")};library(wordcloud)
 
 udemytweets <-readRDS("depression_tweets_final.gzip")
-
 tweets.df <- twListToDF(udemytweets) ##CALMA QUE VAI DEMORAR
-
 tweets_tidy_df <- as_tibble(tweets.df)
+
 # Limpando a base de dados
 
 replace_reg <- "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
 unnest_reg  <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
 
-### Histograma da proporcao de palavras
-### Palavras retiradas do histograma
-
-mystopwords_hist <- c(stop_words$word,"im","wcw","ur",
-                         "depressed.","depression.","depressed,")
-tweets_tidy_df %>% 
-    filter(!str_detect(text, "^RT"),
-           text != "im",
-           text != "ur",
-           text != "af",
-           text != "wcw",
-           text != "shes",
-           text != "booktweeter0",
-           text != "bktwr",
-           !str_detect(text, "[0-9]"),
-           !str_detect(text, ":"),
-           !str_detect(text, "textless")) %>%
-    mutate(text = str_replace_all(text, replace_reg, "")) %>%
-    unnest_tokens(word, text, token = "regex") %>%
-    filter(!word %in% mystopwords_hist,
-           str_detect(word, "[a-z]")) %>%
-    anti_join(stop_words)%>%
-    count(word,sort=TRUE)%>%
-    mutate(word = reorder(word, n)) %>%
-ggplot(aes(n/sum(n))) +
-  geom_histogram(show.legend = FALSE) +
-  xlim(NA, 0.0009) +
-  xlab("Proporção")+
-  ylab("Contagem")
-```
-
-Para iniciar a análise dos textos sobre depressão provenientes do Twitter faremos uma análise sobre a frequência das palavras. Esse tipo de análise permite identificar quais são os termos mais utilizados pelas pessoas nesse banco de dados, fornecendo uma caracterização inicial do que poderemos encontrar nas análises seguintes. No gráfico acima é apresentado um histograma da frequência de cada termo presente nos dados, com exceção de algumas palavras muito comuns (im, ur, etc.) ou que não temos interesse de incluir nessa análise (depression, depressive, depression). Podemos observar que a frequência possui uma distribuição bastante assimétrica, com a grande maioria das palavras aparecendo em um proporção baixa, enquanto algumas palavras que são mais comuns ficam evidenciadas na cauda do histograma.
-
-```{r, message=FALSE,results='hide',echo=TRUE,warning=FALSE}
 ### Palavras retiradas para contagem
 mystopwords_count <- c(stop_words$word,"depression","depressive","depressed",
                   "im","wcw","ur","depressed.","depression.","depressed,",
@@ -181,10 +194,9 @@ tweets_tidy_count <- tweets_tidy_df %>%
   coord_flip()
 ```
 
-Como observado no histograma anterior, um pequeno número de palavras possui uma frequência bem maior que as demais, e estas palavras podem fornecer informações sobre o conteúdo dos dados. No gráfico acima, apresentamos as palavras que aparecem com maior frequência nos tweets analisados, com exceção de alguns termos. Podemos observar que boa parte das palavras estão relacionadas à sentimentos, indicando que as palavras relacionadas à depressão podem estar associadas com termos referentes à como as pessoas se sentem. De fato, a palavra mais frequente dentre os termos associados é "feel".
+**Interpretar**
 
 ```{r, message=FALSE,results='hide',echo=TRUE}
-
 tweets_tidy_df %>% 
   filter(!str_detect(text, "^RT"),
          text != "im",
@@ -208,6 +220,92 @@ tweets_tidy_df %>%
 ```
 
 **Interpretar**
+
+```{r, message=FALSE,results='hide',echo=TRUE,warning=FALSE}
+### Histograma da proporcao de palavras
+### Palavras retiradas do histograma
+
+mystopwords_hist <- c(stop_words$word,"im","wcw","ur",
+                         "depressed.","depression.","depressed,")
+tweets_tidy_df %>% 
+    filter(!str_detect(text, "^RT"),
+           text != "im",
+           text != "ur",
+           text != "af",
+           text != "wcw",
+           text != "shes",
+           text != "booktweeter0",
+           text != "bktwr",
+           !str_detect(text, "[0-9]"),
+           !str_detect(text, ":"),
+           !str_detect(text, "textless")) %>%
+    mutate(text = str_replace_all(text, replace_reg, "")) %>%
+    unnest_tokens(word, text, token = "regex") %>%
+    filter(!word %in% mystopwords_hist,
+           str_detect(word, "[a-z]")) %>%
+    anti_join(stop_words)%>%
+    count(word,sort=TRUE)%>%
+    mutate(word = reorder(word, n)) %>%
+ggplot(aes(n/sum(n))) +
+  geom_histogram(show.legend = FALSE) +
+  xlim(NA, 0.0009) +
+  xlab("Proporção")+
+  ylab("Contagem")
+```
+
+**interpretar**
+
+### Núvem de palavras
+
+```{r, message=FALSE,results='hide',echo=TRUE}
+if("tm" %in% rownames(installed.packages())==FALSE)
+{install.packages("tm")};library(tm)
+
+#convert all text to lower case
+tweets.text <- tolower(tweets.df)
+# Replace blank space ("rt")
+tweets.text <- gsub("rt", "", tweets.text)
+# Replace @UserName
+tweets.text <- gsub("@\\w+", "", tweets.text)
+# Remove punctuation
+tweets.text <- gsub("[[:punct:]]", "", tweets.text)
+# Remove links
+tweets.text <- gsub("http\\w+", "", tweets.text)
+# Remove tabs
+tweets.text <- gsub("[ |\t]{2,}", "", tweets.text)
+# Remove blank spaces at the beginning
+tweets.text <- gsub("^ ", "", tweets.text)
+# Remove blank spaces at the end
+tweets.text <- gsub(" $", "", tweets.text)
+tweets.text <- gsub("href", "", tweets.text)
+tweets.text <- gsub("relnofollowtwitter", "", tweets.text)
+tweets.text <- gsub("iphonea", "", tweets.text)
+tweets.text <- gsub("androida", "", tweets.text)
+tweets.text <- gsub("false", "", tweets.text)
+tweets.text <- gsub("wcw", "", tweets.text)
+tweets.text <- gsub("ball", "", tweets.text)
+tweets.text <- gsub("around", "", tweets.text)
+tweets.text <- gsub("still", "", tweets.text)
+tweets.text <- gsub("goes", "", tweets.text)
+
+bpcorpus <- Corpus(VectorSource(tweets.text))
+bpcorpus <- tm_map(bpcorpus, function(x) removeWords(x, stopwords()))
+bpcorpus <- tm_map(bpcorpus, removeNumbers)
+```
+
+Existe um problema ao rodar o WordCloud aqui:a palavra "depression" aparece como "depressed", "depressive", ent?o vamos substituir.
+
+```{r, message=FALSE,results='hide',echo=TRUE}
+tweets.text <- gsub("depressed", "depress", tweets.text)
+tweets.text <- gsub("depressive", "depress", tweets.text)
+tweets.text <- gsub("depression", "depress", tweets.text)
+tweets.text <- gsub("depressednjonah", "depress", tweets.text)
+
+wordcloud(bpcorpus,min.freq = 300, scale=c(8,0.1),colors=brewer.pal(8, "Dark2"),  
+          random.color= TRUE, random.order = FALSE, max.words = 70)
+```
+
+Mas é importante mostrar como ele funciona, o pacote $\texttt{wordcloud}$ pega as palavras com as maiores frequências nos documentos e as coloca na maneira que miniminiza os espaços em branco de acordo com os tamanhos das palavras, que é proporcional à frequência que elas aparecem. Além disso, o usuário pode escolher manualmente as palavras e as frequências.
 
 ## Análise de sentimentos
 
@@ -366,8 +464,8 @@ Ao comparar a frequência de palavras relacionadas ao sentimento "surprise" obse
 ```
 
 O gráfico acima, criado a partir do dicionário **bing** é conciso em informar que a base de dados em questão possui elevada aparição de palavras negativas. Note que no dicionário **nrc** encontramos certas palavras positivas associadas ao sentimento "surprise", contudo essas palavras não alteram a característica extremamente negativa do texto. Esta conclusão é obtida ao observarmos que em grupos de 150 não há nenhum com score positivo. 
+
 ```{r message=FALSE,results='hide',echo=TRUE}
-#################################################################
 ################# Dicionário afinn              #################     
 
 afinn <-  tweets_tidy_df %>% 
@@ -382,7 +480,6 @@ afinn <-  tweets_tidy_df %>%
           group_by(index = line %/% 20) %>% 
           summarise(sentiment = sum(score)) %>% 
           mutate(method = "AFINN")
-#################################################################
 ################# Comparação de Dicionário     #################     
 bing_and_nrc <- bind_rows(tweets_tidy_df %>%
                             filter(!str_detect(text, "^RT")) %>%
@@ -453,8 +550,8 @@ bigrams_separated %>%
 
 AFINN <- get_sentiments("afinn")
 
-# We can then examine the most frequent words that were preceded by “not” and 
-# were associated with a sentiment.
+# We can then examine the most frequent words that were preceded by “word”  
+
 depression_words <- bigrams_separated %>%
   filter(word1 == "depression") %>%
   inner_join(AFINN, by = c(word2 = "word")) %>%
@@ -522,7 +619,6 @@ A rede de palavras apresenta três nós nos entornos das palavras "depression", 
 No contexto da análise de sentimentos já está evidente que ansiedade possui relação próxima com depressão e sentimentos relacionados. Abaixo realizamos uma análise de correlação entre as palavras cujo objetivo é identifica palavras mais correlacionadas com algum termo específico, no caso "anxiety". 
 
 ```{r message=FALSE,results='hide',echo=TRUE}
-
 if("devtools" %in% rownames(installed.packages())==FALSE)
 {install.packages("devtools")};library(devtools)
 if("widyr" %in% rownames(installed.packages())==FALSE)
@@ -632,5 +728,115 @@ exemplo4$text[2]
 
 Como mencionado, pelo LDA também podemos estimar uma probabilidade que cada usuário tem de pertencer a cada um dos grupos. De maneira similar como foi feito para as palavras, no código anterior identificamos dentro dos grupos 1 e 2 quais pessoas tinham as maiores probabilidades, que é dada pelo índice $\texttt{gamma}$. Acima são mostrados alguns textos dos usuários identificados pelo LDA, onde podemos ver que alguns dos textos parecem ser provenientes de pessoas com um nível expressivo de descontentamento ou tristeza, como os exemplos 1 e 3. No exemplo 2 temos um exemplo onde o usuário escreve diversos trechos relacionados ao livro Dom Quixote de Miguel de Cervantes, onde seus textos podem ter algum grau de tristeza mas não necessariamente indicar que a pessoa tenha depressão. No exemplo 4, o usuário escreve sobre depressão, o que pode explicar o fato dele ser incluído no grupo sobre o sentimento "depression". Em geral, notamos que o método LDA apresenta dificuldade em encontrar grupos dentro dos tweets analisados, mas que a medida de probabilidade para cada pessoa ainda pode fornecer um indicativo se cada pessoa está apresentando textos que se destacam dos demais, o que poderia ser um possível indício de sentimentos negativos que estajam relacionados ao estado de depressão.
 
+## Dendogramas
+
+```{r message=FALSE,results='hide',echo=TRUE}
+if("qdap" %in% rownames(installed.packages())==FALSE)
+{install.packages("qdap")};library(qdap)
+if("dendextend" %in% rownames(installed.packages())==FALSE)
+{install.packages("dendextend")};library(dendextend)
+
+new_stops <-c(mystopwords,"lol","ur","bktwtr","booktweeter","im","https")
+new_stops2 <-c(mystopwords,"depression", "lol","ur","bktwtr","booktweeter","amp","im","https","depressed","depression","depressive","depression")
+
+# matriz de frequência de palavras
+mat_freq  <- wfm(tidy_tweets$word)
+mat_freq  <- as.matrix(mat_freq) #matriz de frequências
+term_freq <-rowSums(mat_freq)
+term_freq <-sort(term_freq,decreasing = T) # lista com as top palavras em orderm decrescente
+
+bardepless  <- barplot(term_freq[1:50],col="tan",las=2) #vizualização das palavras mais frequentes
+```
+
+Nota-se que as expressões *depressed*, *depression* e *depressive* são as mais frequentes, aparecendo, 5007, 3936 e 1784 vezes respectivamente. Este resultado é o esperado, visto que foram justamente as três palavras utilizadas como filtro para a seleção dos tweets que compõe a base de dados do trabalho. A fim de se analisar de forma mais precisa a frequência deste subconjunto de dados, optou-se por retirar estas três observações a fim de tornar a escala de frequência da demais palavras mais clara, como pode-se observar abaixo.
+
+Nota-se que aproximadamente as 20 primeiras palavras possuem um nivel de diferença maior com relação às trinta ultimas palavras. Para uma análise de dendrograma, esta diferença na frequência é de grande signigicância à medida em que os grupos são formados a partir das mesmas. Além disso, nota-se um grande número de palavras que expressam sentimentos, o que revela um padrão dos textos da base selecionada que se relaciona à saúde mental.
+
+Isto posto o próximo passo, foi a construção do dendrograma, com as cinquenta palavras mais frequentes, como exposto abaixo.
+
+```{r message=FALSE,results='hide',echo=TRUE,eval=FALSE}
+dend1 <- hclust((dist(term_freq[1:50],method="euclidean"))) #apenas 50 palavras mais frequentes
+plot(dend1,ylab = "Distância",las=0)
+```
+
+O método selecionado de cálculo das distâncias entre as observações, no caso a distância entre as frequências, foi o euclidiano. Nota-se que há dois grandes grupos de palavras, que se subdividem em pelo menos mais dois grandes grupos, formando os chamados *clusters*. Além disso, pode-se notar que, como esperado, há um grande número de observações na mesma altura do dendrograma, que representam as aproximadamente trinta palavras com frequência semelhantes. Uma das vantagens da construção do dendrograma é o fato de que não é necesessário se definir, a priori, o número de grupos que o conjunto de palavras possui. A partir da análise desde dendrograma, optou-se por definir de forma a priori, o número de clusters, de forma a tornar possível sua vizualização de forma mais clara. O segundo dendrograma abaixo, ilustra o caso com oito grupos:
+
+```{r message=FALSE,results='hide',echo=TRUE}
+par(bg="white")
+dend4.2 <- dist(term_freq[1:50]) %>% 
+  dist %>% 
+  hclust %>%
+  as.dendrogram %>% 
+  set("branches_k_color",value=c("aquamarine2","chocolate1","darkcyan","brown2",
+                      "orange1","purple1","palegreen3","royalblue1") ,k=8) %>%
+  set("labels_colors",k=8,value=c("aquamarine2","chocolate1","darkcyan",
+                                  "brown2","orange1","purple1","palegreen3",
+                                   "royalblue1")) %>%
+  set("labels_cex", c(.5,.5)) %>%  
+  set("nodes_pch", 1,k=8)
+
+plot(dend4.2)
+```
+
+```{r message=FALSE,results='hide',echo=TRUE}
+dend2 <- dist(term_freq[1:20]) %>% dist %>% hclust %>% as.dendrogram %>% 
+  set("branches_k_color",k=5) %>%
+  plot(main = "Dendrograma com 5 clusters",las=1)
+```
+
+```{r message=FALSE,results='hide',echo=TRUE}
+#DENDRO 3 - adicionando cores a 5 clusters HORIZONTAL (observação visual)
+dend3 <- dist(term_freq[1:20]) %>% dist %>% hclust %>% as.dendrogram %>% 
+  set("branches_k_color", k = 5)  %>% 
+  set("labels_cex",.2) %>%
+  hang.dendrogram(hang_height = -1)
+plot(dend3, horiz = T)
+```
+
+```{r message=FALSE,results='hide',echo=TRUE}
+#DENDRO 4 - cores nos labels
+par(bg="white")
+dend4 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>% 
+  set("branches_k_color", k=4) %>%
+  set("labels_colors",k=4) %>% set("labels_cex", c(.5,.5)) %>%  
+  set("nodes_pch", 1)
+plot(dend4)
+```
+
+```{r message=FALSE,results='hide',echo=TRUE}
+par(bg="white")
+dend4.2 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>% 
+  set("branches_k_color", value=c("aquamarine2", "chocolate1","darkcyan","brown2","orange1","purple1","palegreen3","royalblue1") ,k=8) %>%
+  set("labels_colors",k=8, value=c("aquamarine2", "chocolate1","darkcyan","brown2","orange1","purple1","palegreen3","royalblue1") ) %>% set("labels_cex", c(.5,.5)) %>%  
+  set("nodes_pch", 1,k=8)
+plot(dend4.2)
+```
+
+```{r message=FALSE,results='hide',echo=TRUE}
+#dendro 5 - radial - dar cores
+if("ape" %in% rownames(installed.packages())==FALSE)
+{install.packages("ape")};library(ape)
+
+dend5 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram
+plot(as.phylo(dend5), type="fan")
+```
+
+```{r message=FALSE,results='hide',echo=TRUE}
+#if("corrplot" %in% rownames(installed.packages())==FALSE)
+#{install.packages("corrplot")};library(corrplot)
+
+#corrplot(cor.dendlist(dend1234),"pie","lower")
+#par(mfrow = c(1,2),bg="white")
+#plot(dend1, main = "Complete")
+#plot(dend2, main = "Single" )
+#par(mfrow = c(1,1))
+```
+
+*escolher qual dendograma usar*
+
+[^1]: ver https://www.merriam-webster.com/dictionary/dendrogram
+[^2]: As palavras extras exluídas das análise foram: "https", "im" "ur", "lol", "bktwtr", "booktweeter".
+
 # Referências bibliográficas
+
 
