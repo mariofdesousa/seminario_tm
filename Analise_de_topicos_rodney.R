@@ -129,3 +129,41 @@ exemplo$text[5]
 exemplo <- tweets.df %>% filter(screenName == "DepressionRoots") %>%
   select(text)
 exemplo$text[2]
+
+
+
+###############################################################
+###############################################################
+
+# Tentando criar um índice de depressão/tristeza
+
+##################
+# Pequeno exemplo
+depre_words = c("depressed","sad","distant")
+tidy_data
+aux <- filter(tidy_data,screenName %in% c("Neitzschee","Quixotitron_4"))
+
+aux %>%  mutate(ntot = sum(n)) %>%
+  filter(word %in% depre_words) %>%
+  mutate(dep_scr = sum(n/ntot)) %>%
+  ungroup() %>%
+  select(-word) %>%
+  unique()
+##################
+
+depre_words = c("sad","hopeless","unhappy","suicidal","abandoned")
+tidy_data
+
+tidy_dp_index <- tidy_data %>%  mutate(ntot = sum(n)) %>%
+  filter(word %in% depre_words) %>%
+  mutate(dep_scr = sum(n/ntot)) %>%
+  ungroup() %>%
+  select(-word) %>%
+  unique() %>%
+  arrange(desc(dep_scr))
+tidy_dp_index
+
+tweets.df%>%filter(screenName == "myland123456") %>%select(text)
+tweets.df%>%filter(screenName == "depressive__cut") %>%select(text)
+
+tidy_dp_index %>% arrange(dep_scr)
