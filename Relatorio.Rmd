@@ -2,8 +2,9 @@
 title: "Seminário - Mineração de Texto"
 author: "Fabiana, Fernando, Mário, Rafael e Rodney"
 date: "Junho de 2017"
-output: 
-  html_document: 
+output:
+  html_document:
+    css: button.css
     highlight: haddock
     number_sections: yes
     theme: journal
@@ -14,6 +15,8 @@ output:
       smooth_scroll: no
 bibliography: bibliografia.bib
 ---
+<script src="hideOutput.js"></script>
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -124,6 +127,7 @@ O passo seguinte foi a análise gráfica dos termos mais frequentes, a fim de se
 
 ## Contagem de palavras
 
+<div class="fold s o">
 ```{r, message=FALSE,results='hide',echo=TRUE}
 
 if("dplyr" %in% rownames(installed.packages())==FALSE)
@@ -165,7 +169,11 @@ mystopwords_count <- c(stop_words$word,"depression","depressive","depressed",
                   "depression,","me,","lol","#depression","me.","wow",
                   "depressed?","idk","ppl","bc","dont","lot","it.","anxiety,",
                   "her,","af","y'all","rn")
+```
+</div>
 
+<div class="fold s">
+```{r, message=FALSE,results='hide',echo=TRUE}
 ### Limpando a base para a contagem de palavras
 tweets_tidy_count <- tweets_tidy_df %>% 
   filter(!str_detect(text, "^RT"),
@@ -193,9 +201,11 @@ tweets_tidy_count <- tweets_tidy_df %>%
   xlab("Contagem") +
   coord_flip()
 ```
+</div>
 
 **Interpretar**
 
+<div class="fold s">
 ```{r, message=FALSE,results='hide',echo=TRUE}
 tweets_tidy_df %>% 
   filter(!str_detect(text, "^RT"),
@@ -218,9 +228,11 @@ tweets_tidy_df %>%
   mutate(word = reorder(word, n)) %>%
   with(wordcloud(word, n, max.words = 100))
 ```
+</div>
 
 **Interpretar**
 
+<div class="fold s">
 ```{r, message=FALSE,results='hide',echo=TRUE,warning=FALSE}
 ### Histograma da proporcao de palavras
 ### Palavras retiradas do histograma
@@ -252,11 +264,13 @@ ggplot(aes(n/sum(n))) +
   xlab("Proporção")+
   ylab("Contagem")
 ```
+</div>
 
 **interpretar**
 
 ### Núvem de palavras
 
+<div class="fold s o">
 ```{r, message=FALSE,results='hide',echo=TRUE}
 if("tm" %in% rownames(installed.packages())==FALSE)
 {install.packages("tm")};library(tm)
@@ -292,9 +306,11 @@ bpcorpus <- Corpus(VectorSource(tweets.text))
 bpcorpus <- tm_map(bpcorpus, function(x) removeWords(x, stopwords()))
 bpcorpus <- tm_map(bpcorpus, removeNumbers)
 ```
+</div>
 
 Existe um problema ao rodar o WordCloud aqui:a palavra "depression" aparece como "depressed", "depressive", ent?o vamos substituir.
 
+<div class="fold s">
 ```{r, message=FALSE,results='hide',echo=TRUE}
 tweets.text <- gsub("depressed", "depress", tweets.text)
 tweets.text <- gsub("depressive", "depress", tweets.text)
@@ -304,11 +320,13 @@ tweets.text <- gsub("depressednjonah", "depress", tweets.text)
 wordcloud(bpcorpus,min.freq = 300, scale=c(8,0.1),colors=brewer.pal(8, "Dark2"),  
           random.color= TRUE, random.order = FALSE, max.words = 70)
 ```
+</div>
 
 Mas é importante mostrar como ele funciona, o pacote $\texttt{wordcloud}$ pega as palavras com as maiores frequências nos documentos e as coloca na maneira que miniminiza os espaços em branco de acordo com os tamanhos das palavras, que é proporcional à frequência que elas aparecem. Além disso, o usuário pode escolher manualmente as palavras e as frequências.
 
 ## Análise de sentimentos
 
+<div class="fold s">
 ```{r, message=FALSE,results='hide',echo=TRUE}
 
 mystopwords <- c(stop_words$word)
@@ -409,12 +427,14 @@ tidy_tweets %>%
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
+</div>
 
 Utilizando o dicionário **nrc**, observamos a frequência de palavras relacionadas aos sentimentos contidos no dicionário. O objetivo deste tipo de análise é verificar quais palavras estão associadas a quais sentimentos no âmbito da análise em questão.
 
 É interessante destacar que palavras relacionadas a ansiedade, suicídio, morte e cansaço são recorrentes com alta frequência quando contrastamos os sentimentos "negative", "anger", "fear" e "disgust". Este resultado é interessante pois a literatura comumente não encontra alta frequência de palavras associadas a sentimentos distintos. A palavra "anxiety" merece atenção especial uma vez que há referências robustas relacionando ansiedade com depressão e, possivelmente, suicídio. 
 
-```{r message=FALSE,results='hide',echo=TRUE}
+<div class="fold s">
+```{r}
 #####surprise  
 nrsurp <- get_sentiments("nrc") %>% 
   filter(sentiment == "surprise")
@@ -430,9 +450,11 @@ tidy_tweets %>%
   ylab("Número de ocorrências")+
   coord_flip() 
 ```
+</div>
 
 Ao comparar a frequência de palavras relacionadas ao sentimento "surprise" observa-se a presença de diversas palavras positivas. Um resultado curioso é a presença da palavra "Trump", uma óbvia referência ao presidente dos Estados Unidos Donald Trump. Ainda avaliado as ocorrências em "surprise" nota-se que "hope" é uma palavra que aparece com relativa frequência nos tweets relacionados com depressão. Obviamente, "money", também aparece com certa frequência
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 ################# Dicionário Bing      
  tweets_tidy_df %>% 
@@ -462,9 +484,11 @@ Ao comparar a frequência de palavras relacionadas ao sentimento "surprise" obse
   xlab("Index")+
   ylab("Score")
 ```
+</div>
 
 O gráfico acima, criado a partir do dicionário **bing** é conciso em informar que a base de dados em questão possui elevada aparição de palavras negativas. Note que no dicionário **nrc** encontramos certas palavras positivas associadas ao sentimento "surprise", contudo essas palavras não alteram a característica extremamente negativa do texto. Esta conclusão é obtida ao observarmos que em grupos de 150 não há nenhum com score positivo. 
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 ################# Dicionário afinn              #################     
 
@@ -513,11 +537,13 @@ bind_rows(afinn,bing_and_nrc) %>%
   xlab("Index")+
   facet_wrap(~method, ncol = 1, scales = "free_y") 
 ```
+</div>
 
 A comparação entre os três dicionários corrobora o elevado caráter negativo das palavras utilizadas. É relevante ressaltar que, embora o dicionário **afinn** apresente os menores scores, é o dicionário que aponta mais scores positivos para grupos de 20 palavras. No caso aqui considerado os dicionários evidenciam resultados parecidos entre si. Para fins de comparação utilizou-se, para o vocabulário **nrc**, as palavras relacionadas aos sentimentos "positive" e "negative" do referido dicionário.
 
 As análises realizadas até este ponto foram realizadas por meio de unigramas, isto é, análises de palavra por palavra em separado. Análises baseadas em unigramas podem não ser a melhor opção pois há composições de palavras que alteram completamente o sentido da frase. Um exemplo intuitivo e iminente são as palavras precedidas por "not". Quando este é o caso as análises de unigramas captam apenas o sentido de uma palavra, não há como saber se a referida palavra está precedida por "not", o que obviamente altera complemente o sentido da expressão. Para evitar tais problemas e obtermos as sequências de palavras mais frequentes no texto prosseguimos com uma análise baseada em bigramas, isto é, análises baseadas em composições de duas palavras ao invés de uma.
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 #### Bigramas
 
@@ -571,11 +597,13 @@ depression_words %>%
   ylab("Score * número de ocorrências") +
   coord_flip()
 ```
+</div>
 
 Em análise de bigramas algo relevante é a quantidade de vezes que alguma palavra de interesse, no caso "depression", é precedida de outras palavras. Observa-se a ocorrência de algumas palavras relacionadas positivas, sendo as principais "love" e "win". Pelo espectro negativo há de se ressaltar o elevado número de vezes em que a palavra "depression" é precedida de "anxiety", "kills" e palavras relacionadas a suicídio. Confirma-se, a priori, os achados nas análises de unigramas quando se comparou a ocorrência de palavras relacionadas a sentimentos do dicionário **nrc**. Naquele caso as palavras relacionadas a ansiedade e suicídio também apareceram com frequência elevada.
 
 Ainda no contexto de bigramas há de se mencionar as redes de palavras. As redes de palavras são dispositivos visuais que auxiliam na compreensão da base de dados e dos sentimentos envolvidos.
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 
 if("igraph" %in% rownames(installed.packages())==FALSE)
@@ -611,6 +639,7 @@ ggraph(bigram_graph, layout = "fr") +
   geom_node_text(aes(label = name), repel=TRUE, point.padding = unit(0.2, "lines")) +
   theme_void()
 ```
+</div>
 
 A rede de palavras apresenta três nós nos entornos das palavras "depression", "depressive" e "depressed". Algo desta natureza já era esperado uma vez que foram realizadas buscas que continham estas palavras. É interessante observar que palavras de cunho técnico, "clinical", "severe", "deep" e "anxiety" estão relacionadas com a palavra "depression", ao passo que palavras de cunho pejorativo se encontram mais próximas de "depressed" e "depressive" se conecta, na grande parte dos casos, com palavras relacionadas ao grau de depressão ou a eventos relacionados à doença. 
 
@@ -618,6 +647,7 @@ A rede de palavras apresenta três nós nos entornos das palavras "depression", 
 
 No contexto da análise de sentimentos já está evidente que ansiedade possui relação próxima com depressão e sentimentos relacionados. Abaixo realizamos uma análise de correlação entre as palavras cujo objetivo é identifica palavras mais correlacionadas com algum termo específico, no caso "anxiety". 
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 if("devtools" %in% rownames(installed.packages())==FALSE)
 {install.packages("devtools")};library(devtools)
@@ -648,6 +678,7 @@ word_cors %>%
   xlab(NULL)+
   coord_flip()
 ```
+</div>
 
 As palavras mais correlacionadas com "anxiety" são "depression", "disorder" e "social". Mais uma vez se comprova a estreita relação entre ansiedade e depressão. A aparição da palavra "social" neste contexto é bastante interessante pois, segundo a rede de palavras, "social" é frequentemente seguido de "media", então conclui-se que há correlação positiva entre "social media" e "anxiety". Sendo assim observa-se que há estreita relação entre "social media" e depressão, relacão intermediada por "anxiety". 
 
@@ -655,6 +686,7 @@ As palavras mais correlacionadas com "anxiety" são "depression", "disorder" e "
 
 Nesta etapa será realizada uma análise de tópicos para verificar se o método LDA é capaz de encontrar algum agrupar os tweets de alguma forma. Na análise, cada usuário do Twitter será visto como o "documento" do qual o texto faz parte. Para isso, criamos um banco de dados onde as palavras e suas frequências são agrupadas por usuários, identificados pelo $\texttt{screenName}$. Adicionalmente, será feita a suposição de que os textos fazem parte de dois grupos desconhecidos e através da função $\texttt{LDA}$ do pacote $\texttt{topicmodels}$, serão obtidas as probabilidades de cada palavra e de cada usuário (documento) pertencer a cada um dos grupos, que serão identificados pelos números 1 e 2.
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 if("topicmodels" %in% rownames(installed.packages())==FALSE)
 {install.packages("topicmodels")};library(topicmodels)
@@ -673,7 +705,9 @@ depre_lda <- LDA(depre_dtm, k = 2, control = list(seed = 1234))
 # usando o tidy para extrair as probabilidades tópico/palavra
 depre_topics <- tidy(depre_lda, matrix = "beta")
 ```
+</div>
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 # aqui extraímos as palavras com maiores probabilidades de pertecerem
 # a cada um dos tópicos
@@ -692,9 +726,11 @@ depre_top_terms %>%
   xlab("Termo")+
   coord_flip()
 ```
+</div>
 
 Após o método LDA ser aplicado, o índice $\texttt{beta}$ fornece a probabilidade de cada palavra pertencer a um dos grupos. Durante a análise, notamos que não parece haver grupos distintos bem definidos nos tweets analisados, sendo os grupos 1 e 2 bastante similiras e com várias palavras em comum. Tal resultados também foi verificado quando se connsidera números maiores ($k$) de grupos desconhecidos. No gráfico acima são apresentadas para cada grupo identificado pelo LDA as palavras que possuem as maiores de $\texttt{beta}$. Apesar dos grupos 1 e 2 serem bastante parecidos, podemos observar que o primeiro grupo parece estar mais relacionado com o estado "depressed", enquanto no segundo grupo tem-se uma ênfase maior no sentimento "depression".
 
+<div class="fold s">
 ```{r message=FALSE,echo=TRUE}
 # Aqui calculamos a probabilidade de cada pessoa escrever sobre
 # cada um dos tópicos
@@ -725,11 +761,13 @@ exemplo4 <- tweets.df %>% filter(screenName == "DepressionRoots") %>%
   select(text)
 exemplo4$text[2]
 ```
+</div>
 
 Como mencionado, pelo LDA também podemos estimar uma probabilidade que cada usuário tem de pertencer a cada um dos grupos. De maneira similar como foi feito para as palavras, no código anterior identificamos dentro dos grupos 1 e 2 quais pessoas tinham as maiores probabilidades, que é dada pelo índice $\texttt{gamma}$. Acima são mostrados alguns textos dos usuários identificados pelo LDA, onde podemos ver que alguns dos textos parecem ser provenientes de pessoas com um nível expressivo de descontentamento ou tristeza, como os exemplos 1 e 3. No exemplo 2 temos um exemplo onde o usuário escreve diversos trechos relacionados ao livro Dom Quixote de Miguel de Cervantes, onde seus textos podem ter algum grau de tristeza mas não necessariamente indicar que a pessoa tenha depressão. No exemplo 4, o usuário escreve sobre depressão, o que pode explicar o fato dele ser incluído no grupo sobre o sentimento "depression". Em geral, notamos que o método LDA apresenta dificuldade em encontrar grupos dentro dos tweets analisados, mas que a medida de probabilidade para cada pessoa ainda pode fornecer um indicativo se cada pessoa está apresentando textos que se destacam dos demais, o que poderia ser um possível indício de sentimentos negativos que estajam relacionados ao estado de depressão.
 
 ## Dendogramas
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 if("qdap" %in% rownames(installed.packages())==FALSE)
 {install.packages("qdap")};library(qdap)
@@ -747,6 +785,7 @@ term_freq <-sort(term_freq,decreasing = T) # lista com as top palavras em orderm
 
 bardepless  <- barplot(term_freq[1:50],col="tan",las=2) #vizualização das palavras mais frequentes
 ```
+</div>
 
 Nota-se que as expressões *depressed*, *depression* e *depressive* são as mais frequentes, aparecendo, 5007, 3936 e 1784 vezes respectivamente. Este resultado é o esperado, visto que foram justamente as três palavras utilizadas como filtro para a seleção dos tweets que compõe a base de dados do trabalho. A fim de se analisar de forma mais precisa a frequência deste subconjunto de dados, optou-se por retirar estas três observações a fim de tornar a escala de frequência da demais palavras mais clara, como pode-se observar abaixo.
 
@@ -754,13 +793,16 @@ Nota-se que aproximadamente as 20 primeiras palavras possuem um nivel de diferen
 
 Isto posto o próximo passo, foi a construção do dendrograma, com as cinquenta palavras mais frequentes, como exposto abaixo.
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE,eval=FALSE}
 dend1 <- hclust((dist(term_freq[1:50],method="euclidean"))) #apenas 50 palavras mais frequentes
 plot(dend1,ylab = "Distância",las=0)
 ```
+</div>
 
 O método selecionado de cálculo das distâncias entre as observações, no caso a distância entre as frequências, foi o euclidiano. Nota-se que há dois grandes grupos de palavras, que se subdividem em pelo menos mais dois grandes grupos, formando os chamados *clusters*. Além disso, pode-se notar que, como esperado, há um grande número de observações na mesma altura do dendrograma, que representam as aproximadamente trinta palavras com frequência semelhantes. Uma das vantagens da construção do dendrograma é o fato de que não é necesessário se definir, a priori, o número de grupos que o conjunto de palavras possui. A partir da análise desde dendrograma, optou-se por definir de forma a priori, o número de clusters, de forma a tornar possível sua vizualização de forma mais clara. O segundo dendrograma abaixo, ilustra o caso com oito grupos:
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 par(bg="white")
 dend4.2 <- dist(term_freq[1:50]) %>% 
@@ -777,13 +819,17 @@ dend4.2 <- dist(term_freq[1:50]) %>%
 
 plot(dend4.2)
 ```
+</div>
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 dend2 <- dist(term_freq[1:20]) %>% dist %>% hclust %>% as.dendrogram %>% 
   set("branches_k_color",k=5) %>%
   plot(main = "Dendrograma com 5 clusters",las=1)
 ```
+</div>
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 #DENDRO 3 - adicionando cores a 5 clusters HORIZONTAL (observação visual)
 dend3 <- dist(term_freq[1:20]) %>% dist %>% hclust %>% as.dendrogram %>% 
@@ -792,7 +838,9 @@ dend3 <- dist(term_freq[1:20]) %>% dist %>% hclust %>% as.dendrogram %>%
   hang.dendrogram(hang_height = -1)
 plot(dend3, horiz = T)
 ```
+</div>
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 #DENDRO 4 - cores nos labels
 par(bg="white")
@@ -802,7 +850,9 @@ dend4 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>%
   set("nodes_pch", 1)
 plot(dend4)
 ```
+</div>
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 par(bg="white")
 dend4.2 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>% 
@@ -811,7 +861,9 @@ dend4.2 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram %>%
   set("nodes_pch", 1,k=8)
 plot(dend4.2)
 ```
+</div>
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 #dendro 5 - radial - dar cores
 if("ape" %in% rownames(installed.packages())==FALSE)
@@ -820,7 +872,9 @@ if("ape" %in% rownames(installed.packages())==FALSE)
 dend5 <- dist(term_freq[1:50]) %>% dist %>% hclust %>% as.dendrogram
 plot(as.phylo(dend5), type="fan")
 ```
+</div>
 
+<div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
 #if("corrplot" %in% rownames(installed.packages())==FALSE)
 #{install.packages("corrplot")};library(corrplot)
@@ -831,6 +885,7 @@ plot(as.phylo(dend5), type="fan")
 #plot(dend2, main = "Single" )
 #par(mfrow = c(1,1))
 ```
+</div>
 
 *escolher qual dendograma usar*
 
