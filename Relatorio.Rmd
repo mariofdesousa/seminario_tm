@@ -28,28 +28,40 @@ Sabemos que com a popularização da internet, um enorme volume dados é gerado 
 
 Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoções expressos em texto, e para tal, será preciso criar métricas para contabilização dos mesmos.
 
+No trabalho a seguir, utilizamos o R para tratar estes textos e resolver o nosso problema através da Análise de Sentimentos.
+
+## Descrição dos dados
+A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. 
+
+O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". 
+
+A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com os métodos  $\texttt{tidy}$ e $\texttt{tm}$.
+
 ## Contagem e frequência de palavras
 
 Segundo GOMES (2013), o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (TAN, 1999). 
 
-Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência, percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. 
-Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras, que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto: quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquico com a contagem das palavras, devemos intalar um arquivo Word.cloud
+O primeiro passo será realizar a contagem e frequencia das palavras chave escolhidas pelo grupo.
+
+Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. 
 
 ### Núvem de palavras
+
+Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras; que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto.
+
+Quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquivo com a contagem das palavras. Para isso, devemos intalar um arquivo Word.cloud
 
 Um WordCloud é feito com as palavras mais utilizadas em um determinado texto ou documento, de forma com que fique visual e chamativo para as palavras mais importantes.
 
 Para a nossa base de dados foram utilizados tweets da plataforma social "twitter", sendo que foram baixados 30.000(trinta mil) tweets, tendo a partir deles palavras relacionadas a depressão, sendo todas no idioma inglês, como "depression" e "anxiety".
 
-
 Dado isso foi feita uma separação dos dados na linguagem R e os dados foram transformados em "Data Frame" para manipulação. Depois fazemos todas as limpezas necessárias para que o texto fique uniforme, como deixar todas as letras minísculas, remover os nomes de usuário, tirar pontuação, links e espaços em branco desnecessários, e por fim, números e palavras desnecessárias, como a identificação do aparelho pelo qual foi enviado o tweet.
-
-## Descrição dos dados
-A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com os métodos  $\texttt{tidy}$ e $\texttt{tm}$.
 
 ## Análise de tópicos
 
-Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados.  Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposto por @blei2003latent. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam @berry2010text.
+Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados.  
+
+Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposto por @blei2003latent. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam @berry2010text.
 
 As principais características do LDA, como apresentam @Silge2017Text, são as seguintes:
 
@@ -83,11 +95,15 @@ Em análise de sentimentos o principal objetivo consiste em fazer "inferência""
 
 @goncalves2013 discute que não há a "melhor" técnica para se aplicar em análise de sentimentos. Conclusão semelhante foi obtida por @ribeiro2016 após comparar 22 métodos diferentes em 18 documentos onde não foi possível encontrar um método que fosse igualmente bom, em termos de classificação, para todos os textos. 
 
-Na aplicação sobre depressão iremos considerar os dicionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013), por estarem disponíveis no R. Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras em que são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras. De modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais posiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
+Na aplicação sobre depressão iremos considerar os dicionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013), por estarem disponíveis no R. 
+
+Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras em que são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras. De modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais posiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
 
 Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. É haver algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulário são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto de séculos atrás. A análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
 
-Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a tais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos ao longo do texto. Note que a quantidade de linhas que serãoagrupadas depende do tipo e do tamanho do texto que está sendo análisado. Ainda utilizando o dicionário **bing**, apresentamos uma núvem de palavras de sentimentos, isto é, uma núvem de palavras com distinção entre palavras positivas e negativas. Prosseguimos a análise de sentimentos comparando os três dicionários, de modo a observar se há alguma discrepância em algum deles. 
+Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a tais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. 
+
+Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos ao longo do texto. Note que a quantidade de linhas que serão agrupadas depende do tipo e do tamanho do texto que está sendo análisado. Ainda utilizando o dicionário **bing**, apresentamos uma núvem de palavras de sentimentos, isto é, uma núvem de palavras com distinção entre palavras positivas e negativas. Prosseguimos a análise de sentimentos comparando os três dicionários, de modo a observar se há alguma discrepância em algum deles. 
 
 ## Dendrogramas
 
@@ -119,12 +135,9 @@ Com relação à aglomeração, em cada estágio do processo a distância entre 
 
 Á título de ilustração, na próxima sessão se demonstrará a diferença entre os métodos, assim como sua aplicação para a análise de dados abertos do aplicativo Twitter.
 
-
 ### Construindo o Dendrograma
 
 O primeiro passo para a construção do dendrograma para análise saúde mental a partir do Twitter, foi a "limpeza" do conjunto textual selecionado. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras, que recebe o nome de *stopwords*, ao mesmo tempo que não acrescentam valor semantico são muito frequentes por serem compostas por artigos, preposições e pronomes. No caso em questão, utilizou-se o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma @v15
-
-
 
 Após a eliminação destas palavras, contruiu-se uma matriz de frequência das palavras e analisou-se as 50 palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. Notou-se que algumas palavras extras poderiam ser removidas como abreviações e gírias que as "stopwords" predefinidas não contemplavam\footnote[^2].
 
