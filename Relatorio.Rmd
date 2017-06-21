@@ -25,8 +25,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Contagem e frequência de palavras
 
+Sabemos que com a popularização da internet, um enorme volume dados é gerado a cada minuto. Durante anos, aprendemos a tabular e quantificar variáveis acomodadas em bancos de dados, porém os tempos são outros.
 Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoções expressos em texto, e para tal, será preciso criar métricas para contabilização dos mesmos.
-Sabemos que com a popularização da internet, um enorme volume dados é gerado a cada minuto. Segundo GOMES (2013), o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (TAN, 1999). Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência, percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras, que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto: quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquico com a contagem das palavras, devemos intalar um arquivo Word.cloud
+Segundo GOMES (2013), o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (TAN, 1999). 
+Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência, percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. 
+Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras, que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto: quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquico com a contagem das palavras, devemos intalar um arquivo Word.cloud
 
 ### Núvem de palavras
 
