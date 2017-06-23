@@ -135,35 +135,34 @@ exemplo$text[2]
 ###############################################################
 ###############################################################
 
-# Tentando criar um índice de depressão/tristeza
+# Criando um índice de depressão/tristeza
 
-##################
-# Pequeno exemplo
-depre_words = c("depressed","sad","distant")
-tidy_data
-aux <- filter(tidy_data,screenName %in% c("Neitzschee","Quixotitron_4"))
+# 99 palavras sobre depressão listadas no site abaixo mais depressed
+# https://adarkershadeofblue.wordpress.com/2011/08/20/99-words-about-depression/
+depre_words = c("depressed","abandoned","achy","afraid","agitated","agony","alone","anguish","antisocial","anxious","breakdown","brittle","broken","catatonic","consumed","crisis","crushed","crying","defeated","defensive","dejected","demoralized","desolate","despair","desperate","despondent","devastated","discontented","disheartened","dismal","distractable","distraught","distressed","doomed","dreadful","dreary","edgy","emotional","empty","excluded","exhausted","exposed","fatalistic","forlorn","fragile","freaking","gloomy","grouchy","hate","helpless","hopeless","hurt","inadequate","inconsolable","injured","insecure","irrational","irritable","isolated","lonely","lousy","low","melancholy","miserable","moody","morbid","needy","nervous","nightmarish","oppressed","overwhelmed","pain","paranoid","pessimistic","reckless","rejected","resigned","sadness","self-conscious","self-disgust","shattered","sobbing","sorrowful","suffering","suicidal","tearful","touchy","trapped","uneasy","unhappy","unhinged","unpredictable","upset","vulnerable","wailing","weak","weepy","withdrawn","woeful","wounded","wretched")
+#tidy_data
 
-aux %>%  mutate(ntot = sum(n)) %>%
-  filter(word %in% depre_words) %>%
-  mutate(dep_scr = sum(n/ntot)) %>%
-  ungroup() %>%
-  select(-word) %>%
-  unique()
-##################
-
-depre_words = c("sad","hopeless","unhappy","suicidal","abandoned")
-tidy_data
-
+# Considere as seguintes variáveis
+# ntot:total de palavras consideras
+# ndep: total de palavras que estão na lista sobre depressão
+# o índice utilizado foi 1 + 1/(ndep*log(1 - p) - 1), onde
+# p=ndep/ntot. O índice assume valores entre 0 e 1, quando mais 
+# próximo de 1 mais depressivo é o conteúdo do texto
 tidy_dp_index <- tidy_data %>%  mutate(ntot = sum(n)) %>%
   filter(word %in% depre_words) %>%
-  mutate(dep_scr = sum(n/ntot)) %>%
+  filter(ntot>9) %>%
+  mutate(ndep = sum(n)) %>%
+  mutate(dep_scr = (1 + 1/(ndep*log(1 - ndep/ntot) - 1))) %>%
   ungroup() %>%
-  select(-word) %>%
+  select(-c(word,n)) %>%
   unique() %>%
   arrange(desc(dep_scr))
-tidy_dp_index
-
-tweets.df%>%filter(screenName == "myland123456") %>%select(text)
-tweets.df%>%filter(screenName == "depressive__cut") %>%select(text)
-
-tidy_dp_index %>% arrange(dep_scr)
+tidy_dp_index %>% head(2)  # usuários com maiores índices
+tidy_dp_index %>% arrange(dep_scr) %>% head(2)  # usuários com menores índices
+# textos de usuários detectados com maiores índices
+tweets.df%>%filter(screenName == "SaffCulverwell") %>%select(text) %>% head(1)
+tweets.df%>%filter(screenName == "lanadelskinny") %>%select(text) %>% head(1)
+# textos de usuários detectados com menores índices
+tweets.df%>%filter(screenName == "DepressionRoots") %>%select(text) %>% head(1)
+tweets.df%>%filter(screenName == "juliaweitz2") %>%select(text) %>% head(1)
+##################
