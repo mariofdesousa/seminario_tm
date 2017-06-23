@@ -912,6 +912,63 @@ plot(as.phylo(dend5), type="fan")
 [^1]: ver https://www.merriam-webster.com/dictionary/dendrogram
 [^2]: As palavras extras exluídas das análise foram: "https", "im" "ur", "lol", "bktwtr", "booktweeter".
 
+## Índice de depressão e tristeza
+
+Um dos objetivos desse trabalho é fornecer um método que seja capaz de identificar se uma pessoa apresenta sinai de depressão através dos seus textos no Twitter. Uma proposta que apresentamos nessa direção é utilizar um índice que leve em consideração a proporção de palavras relacionadas à depressão que cada usuário digitou. Para isso, consideramos a lista de 99 palavras que possuem alguma relação com depressão fornecidas na página da internet \cite(https://adarkershadeofblue.wordpress.com/2011/08/20/99-words-about-depression/). A palavra depressed também foi adicionada à essa lista, uma vez que na análise de redes essa palavras foi observada possuir uma maior relação com sentimentos depressivos que depressive e depression.
+
+Considerando para cada usuário $n_{tot}$ o número total de palavras digitadas, desconsiderando stopwords, e $n_{dep}$ o número de palavras que estão presentes na lista de 100 palavras relacionadas à depressão, o índice que nós propomos é dado por
+$$
+dep_{scr} = 1 + \frac{1}{n_{dep}*\log(1-p_{dep})-1},
+$$
+em que $p_{dep} = n_{dep}/n_{tot}$ é a proporção de palavras relacionadas com depressão do usuário. Pode-se notar que $p_{dep} \rightarrow 0 \Rightarrow dep_{scr} \rightarrow 0$ e $p_{dep} \rightarrow 1 \Rightarrow dep_{scr} \rightarrow 1$, ou seja, quanto mais próximo de um for o valor de $dep_{scr}$ mais indícios a pessoa tem de estar escrevendo sobre algo relacionado à depressão. Vale destacar que se a análise fosse feita somente sobre $p_{dep}$ pessoas que escrevem pouco tenderiam a ter mais indícios de depressão contendo poucas palavras na lista sobre depressão. Ao considerar $dep_{dep}$ ao invés de simplesmente $p_{dep}$, levamos em conta a ideia de que entre duas pessoas com o mesmo valor de $p_{dep}$, aquela com maior número de palavras depressivas $n_{dep}$ deverá ter um índice de depressão maior, enquante se duas pessoas tiverem o mesmo valor de $n_{dep}$, o valor de $dep_{scr}$ seja maior para o indivíduo com maior $p_{dep}$. 
+
+Um problema com $dep_{scr}$ é que, se $p_{dep}$ tende à uma constante conforme $n_{tot}\rightarrow \infty$, então $n_{dep} \rightarrow \infty \Rightarrow dep_{scr}$, independente do valor limite $p_{dep}$. Por outro lado, como mencionamos anteriormente, para valores finitos de $n_{tot}$ e $n_{dep}$ temos que $dep_{scr}$ fornece critérios de comparação mais adequados que utilizar somente $p_{dep}$. No código abaixo o valor de $dep_{scr}$ foi calculado para cada usuário analisado.
+
+<div class="fold s">
+```{r message=FALSE,results='hide',echo=TRUE}
+# Criando um tidy com contando as palavras por usuário
+tidy_data <- tidy_tweets %>%
+    group_by(screenName) %>%
+    count(word, sort = TRUE) %>%
+    filter(n >= 0)
+# 99 palavras sobre depressão listadas no site abaixo mais depressed
+# https://adarkershadeofblue.wordpress.com/2011/08/20/99-words-about-depression/
+depre_words = c("depressed","abandoned","achy","afraid","agitated","agony","alone","anguish","antisocial","anxious","breakdown","brittle","broken","catatonic","consumed","crisis","crushed","crying","defeated","defensive","dejected","demoralized","desolate","despair","desperate","despondent","devastated","discontented","disheartened","dismal","distractable","distraught","distressed","doomed","dreadful","dreary","edgy","emotional","empty","excluded","exhausted","exposed","fatalistic","forlorn","fragile","freaking","gloomy","grouchy","hate","helpless","hopeless","hurt","inadequate","inconsolable","injured","insecure","irrational","irritable","isolated","lonely","lousy","low","melancholy","miserable","moody","morbid","needy","nervous","nightmarish","oppressed","overwhelmed","pain","paranoid","pessimistic","reckless","rejected","resigned","sadness","self-conscious","self-disgust","shattered","sobbing","sorrowful","suffering","suicidal","tearful","touchy","trapped","uneasy","unhappy","unhinged","unpredictable","upset","vulnerable","wailing","weak","weepy","withdrawn","woeful","wounded","wretched")
+
+# Considere as seguintes variáveis
+# ntot:total de palavras consideras
+# ndep: total de palavras que estão na lista sobre depressão
+# o índice utilizado foi 1 + 1/(ndep*log(1 - p) - 1), onde
+# p=ndep/ntot. O índice assume valores entre 0 e 1, quando mais 
+# próximo de 1 mais depressivo é o conteúdo do texto
+tidy_dp_index <- tidy_data %>%  mutate(ntot = sum(n)) %>%
+  filter(word %in% depre_words) %>%
+  filter(ntot>9) %>%
+  mutate(ndep = sum(n)) %>%
+  mutate(dep_scr = (1 + 1/(ndep*log(1 - ndep/ntot) - 1))) %>%
+  ungroup() %>%
+  select(-c(word,n)) %>%
+  unique() %>%
+  arrange(desc(dep_scr))
+tidy_dp_index %>% head(2)  # usuários com maiores índices
+tidy_dp_index %>% arrange(dep_scr) %>% head(2)  # usuários com menores índices
+```
+</div>
+
+Abaixo apresentamos os dois usuários que apresentaram os maiores de $dep_{scr}$ e os dois usuários que apresentaram os menores $dep_{scr}$. Analisando trechos dos textos desses usuários, notamos que os dois primeiros apresentam teores bastante depressivos, com uma alta concentração de palavras negativas, diferentemente dos dois últimos textos, que parecem não serem tão expressivamente negativos como os anteriores.
+
+<div class="fold s">
+```{r message=FALSE,results='hide',echo=TRUE}
+# textos de usuários detectados com maiores índices
+tweets.df%>%filter(screenName == "SaffCulverwell") %>%select(text) %>% head(1)
+tweets.df%>%filter(screenName == "lanadelskinny") %>%select(text) %>% head(1)
+# textos de usuários detectados com menores índices
+tweets.df%>%filter(screenName == "DepressionRoots") %>%select(text) %>% head(1)
+tweets.df%>%filter(screenName == "juliaweitz2") %>%select(text) %>% head(1)
+```
+</div>
+
+
 # Referências bibliográficas
 
 
