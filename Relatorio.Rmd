@@ -918,7 +918,7 @@ Um dos objetivos desse trabalho é fornecer um método que seja capaz de identif
 
 Considerando para cada usuário $n_{tot}$ o número total de palavras digitadas, desconsiderando stopwords, e $n_{dep}$ o número de palavras que estão presentes na lista de 100 palavras relacionadas à depressão, o índice que nós propomos é dado por
 $$
-dep_{scr} = 1 + \frac{1}{n_{dep}*\log(1-p_{dep})-1},
+\text{dep}_{\text{scr}} = 1 + \frac{1}{n_{\text{dep}}*\log(1-p_{\text{dep}})-1},
 $$
 em que $p_{dep} = n_{dep}/n_{tot}$ é a proporção de palavras relacionadas com depressão do usuário. Pode-se notar que $p_{dep} \rightarrow 0 \Rightarrow dep_{scr} \rightarrow 0$ e $p_{dep} \rightarrow 1 \Rightarrow dep_{scr} \rightarrow 1$, ou seja, quanto mais próximo de um for o valor de $dep_{scr}$ mais indícios a pessoa tem de estar escrevendo sobre algo relacionado à depressão. Vale destacar que se a análise fosse feita somente sobre $p_{dep}$ pessoas que escrevem pouco tenderiam a ter mais indícios de depressão contendo poucas palavras na lista sobre depressão. Ao considerar $dep_{dep}$ ao invés de simplesmente $p_{dep}$, levamos em conta a ideia de que entre duas pessoas com o mesmo valor de $p_{dep}$, aquela com maior número de palavras depressivas $n_{dep}$ deverá ter um índice de depressão maior, enquante se duas pessoas tiverem o mesmo valor de $n_{dep}$, o valor de $dep_{scr}$ seja maior para o indivíduo com maior $p_{dep}$. 
 
@@ -958,13 +958,19 @@ tidy_dp_index %>% arrange(dep_scr) %>% head(2)  # usuários com menores índices
 Abaixo apresentamos os dois usuários que apresentaram os maiores de $dep_{scr}$ e os dois usuários que apresentaram os menores $dep_{scr}$. Analisando trechos dos textos desses usuários, notamos que os dois primeiros apresentam teores bastante depressivos, com uma alta concentração de palavras negativas, diferentemente dos dois últimos textos, que parecem não serem tão expressivamente negativos como os anteriores.
 
 <div class="fold s">
-```{r message=FALSE,results='hide',echo=TRUE}
+```{r message=FALSE,echo=TRUE}
 # textos de usuários detectados com maiores índices
-tweets.df%>%filter(screenName == "SaffCulverwell") %>%select(text) %>% head(1)
-tweets.df%>%filter(screenName == "lanadelskinny") %>%select(text) %>% head(1)
+mai1 <- tweets.df%>%filter(screenName == "SaffCulverwell") %>%
+  select(text) %>% head(1)
+mai2 <- tweets.df%>%filter(screenName == "lanadelskinny") %>%
+  select(text) %>% head(1)
 # textos de usuários detectados com menores índices
-tweets.df%>%filter(screenName == "DepressionRoots") %>%select(text) %>% head(1)
-tweets.df%>%filter(screenName == "juliaweitz2") %>%select(text) %>% head(1)
+mei1 <- tweets.df%>%filter(screenName == "DepressionRoots") %>%
+  select(text) %>% head(1)
+mei2 <- tweets.df%>%filter(screenName == "juliaweitz2") %>%
+  select(text) %>% head(1)
+print(c(mai1,mai2,mei1,mei2))
+
 ```
 </div>
 
