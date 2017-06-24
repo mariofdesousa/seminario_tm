@@ -39,19 +39,17 @@ A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações
 
 ## Contagem e frequência de palavras
 
-Segundo GOMES (2013), o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto (TAN, 1999). 
+Segundo @gomes2013text, o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto [@Tan99textmining].
 
-O primeiro passo será realizar a contagem e frequencia das palavras chave escolhidas pelo grupo.
+O primeiro passo será realizar a contagem e frequência das palavras chave escolhidas pelo grupo.
 
-Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a freqüência percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. 
+Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a frequência percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. 
 
 ### Núvem de palavras
 
-Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras; que são imagens que demonstram de maneira visual, a frequência da ocorrência das palavras em um dado texto.
+Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras que são imagens que demonstram de maneira visual a frequência da ocorrência das palavras em um dado texto.
 
-Quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Depois de criarmos um arquivo com a contagem das palavras. Para isso, devemos intalar um arquivo Word.cloud
-
-Um WordCloud é feito com as palavras mais utilizadas em um determinado texto ou documento, de forma com que fique visual e chamativo para as palavras mais importantes.
+Após criarmos um arquivo com a contagem das palavras, quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Inicialmente, para realizar esse tipo de análise devemos instalar um arquivo $\texttt{Word.cloud}$. Um WordCloud é feito com as palavras mais utilizadas em um determinado texto ou documento, de forma com que fique visual e chamativo para as palavras mais importantes.
 
 Para a nossa base de dados foram utilizados tweets da plataforma social "twitter", sendo que foram baixados 30.000(trinta mil) tweets, tendo a partir deles palavras relacionadas a depressão, sendo todas no idioma inglês, como "depression" e "anxiety".
 
@@ -69,7 +67,7 @@ As principais características do LDA, como apresentam @Silge2017Text, são as s
 
 * Diferentes palavras podem fazer parte de diferentes tópicos: a palavra "estudante" pode estar mais associada a um tópico sobre universidades enquanto que "cliente" pode ser mais associado a um tópico sobre empresas, mas o termo "dados" pode estar relacionado de maneira similar a ambos esses tópicos.
 
-Para exemplificar a suposição do modelo LDA vamos considerar as seguintes notações: uma palavra $w$ é uma unidade discreta de um conjunto que forma o vocabulário utilizado; um documento $\mathbf{w} = \left(w_1,\ldots,w_N\right)$ é um conjunto de $N$ palavras; um corpo $D=\left\{\mathbf{w}_1,\ldots,\mathbf{w}_M\right\}$ é um conjunto de $M$ documentos. Adicionalmente, no LDA o número de tópicos existentes é assumido conhecido, mas os tópicos em si são variáveis latentes que não conhecemos e desejamos estimar. Dessa maneira, @blei2003latent consideram as seguintes suposições na geração do corpo:
+Para exemplificar as suposições do modelo LDA vamos considerar as seguintes notações: uma palavra $w$ é uma unidade discreta de um conjunto que forma o vocabulário utilizado; um documento $\mathbf{w} = \left(w_1,\ldots,w_N\right)$ é um conjunto de $N$ palavras; um corpo $D=\left\{\mathbf{w}_1,\ldots,\mathbf{w}_M\right\}$ é um conjunto de $M$ documentos. Adicionalmente, no LDA o número de tópicos existentes é assumido conhecido, mas os tópicos em si são variáveis latentes que não conhecemos e desejamos estimar. Dessa maneira, @blei2003latent consideram as seguintes suposições na geração do corpo:
 
 1. Gera-se $N\sim \textrm{Pois}\left(\lambda\right)$;
 2. Gera-se $\theta = \textrm{Dirichlet}\left(\mathbf{\alpha}\right)$, o qual será o vetor de probabilidades dos $k$ tópicos;
@@ -86,20 +84,20 @@ No programa $\texttt{R}$ a análise de tópicos pode ser realizada através do p
 
 ## Análise de sentimentos
 
-Em análise de sentimentos o principal objetivo consiste em fazer "inferência"" sobre sentimetos expressos em forma de texto. @messias2017 cita algumas das recentes aplicações da referida metodologia, sendo as principais:
+Em análise de sentimentos o principal objetivo consiste em fazer "inferência" sobre sentimetos expressos em forma de texto. @messias2017 citam algumas das recentes aplicações da referida metodologia, sendo as principais:
 
 * Monitorar a reputação de alguma empresa ou marca;
 * Fornecer perspectivas analíticas para investidores sobre determinado mercado (se certo mercado tem potencial ou não);
 * Rastrear opiniões associadas a certos políticos (tais informações são úteis para o marketing do candidato) e
 * Proporcionar meios de mensurar o bem-estar dos usuários de certo modelo de smartphone.
 
-@goncalves2013 discute que não há a "melhor" técnica para se aplicar em análise de sentimentos. Conclusão semelhante foi obtida por @ribeiro2016 após comparar 22 métodos diferentes em 18 documentos onde não foi possível encontrar um método que fosse igualmente bom, em termos de classificação, para todos os textos. 
+@goncalves2013 discutem que não há a "melhor" técnica para se aplicar em análise de sentimentos. Conclusão semelhante foi obtida por @ribeiro2016 após comparar 22 métodos diferentes em 18 documentos onde não foi possível encontrar um método que fosse igualmente bom, em termos de classificação, para todos os textos. 
 
-Na aplicação sobre depressão iremos considerar os dicionários de sentimentos **afinn**(@afinn2011), **bing**(@bing2005) e **nrc**(@nrc2013), por estarem disponíveis no R. 
+Na aplicação sobre depressão iremos considerar os dicionários de sentimentos **afinn** [@afinn2011], **bing** [@bing2005] e **nrc** [@nrc2013], por estarem disponíveis no R. 
 
-Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras em que são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras. De modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais posiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
+Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras em que são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras, de modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais posiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
 
-Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. É haver algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulário são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto de séculos atrás. A análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
+Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. Deve haver algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulário são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto de séculos atrás. A análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
 
 Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a tais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. 
 
@@ -109,7 +107,7 @@ Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos
 
 De acordo com o dicionário Merriam-Webster[^1], um dendograma se define como um diagrama em árvore que representa uma hierarquia de grupos de objetos, baseada em sua similiaridade ou características em comum.
 
-No caso da análise textual, as palavras são os elementos que compõe os grupos do diagrama. A distância medida entre elas, por sua vez, depende da frequência de ocorrência de cada palavra. Definidos os grupos e sua respectiva hierarquia, o objetivo do dendrograma é facilitar a associação entre as palavras a fim de se extrair informações relevantes sobre o texto @t17.
+No caso da análise textual, as palavras são os elementos que compõem os grupos do diagrama. A distância medida entre elas, por sua vez, depende da frequência de ocorrência de cada palavra. Definidos os grupos e sua respectiva hierarquia, o objetivo do dendrograma é facilitar a associação entre as palavras a fim de se extrair informações relevantes sobre o texto [@t17].
 
 Diversos métodos podem ser utilizados para o agrupamento de objetos. O dendrograma é o resultado em diagrama de um método aglomerativo hierárquico. Neste método, cada objeto da análise é inicialmente considerado como um grupo individual. Em seguida, objetos com pouco distância entre si são aglomerados em grupos maiores. Estes  grupos maiores, por seu turno, são reagrupados, novamente segundo a distância entre seus objetos. Ao final do processo, todos os grupos se aglomeram em apenas um. A vizualização deste processo é o próprio dendrograma \cite{http://www.stewartschultz.com/statistics/books/Cambridge%20Dictionary%20Statistics%204th.pdf}.
 
@@ -118,26 +116,30 @@ No R, existem seis métodos de mensuração da distância entre os objetos, no c
 
 
 1) **Euclidiana**: o método padrão de distância entre vetores 
-$$\sum{(x_i- y_i^2)}$$
+$$\sum{(x_i- y_i)^2}$$
 
-2) **Máximos**: mede a distância máxima entre componentes de dois vetores:$$\max{x_i,y_i}$$
+2) **Máximos**: mede a distância máxima entre componentes de dois vetores:
+$$\max{|x_i - y_i|}$$
 
-3) **Manhattan**: mede a distância absoluta entre dois vetores $$[{x_i, y_i}]$$
+3) **Manhattan**: mede a distância absoluta entre dois vetores 
+$$\sum{|x_i- y_i|}$$
 
-4) **Canberra**: definido pela seguinte expressão, onde termos nulos do denominador são excluídos da amostra: $$\sum\frac{(|x_i - y_i|}{ |x_i + y_i|}).$$ 
+4) **Canberra**: definido pela seguinte expressão, onde termos nulos do denominador são excluídos da amostra: 
+$$\sum\frac{|x_i - y_i|}{ |x_i + y_i|}.$$ 
 
 5) **Binário**: A distância é a proporção de vetores considerados binários, (*bits*), em que apenas um dos vetores está presente dentre aqueles em que apenas os vetores 1 estão incluídos.
 
-6) **Minkowski**: a p-ésima raíz da soma dos das diferenças dos componentes elevada à p-ésima potência. $$\sqrt[p_{th}]{(x_i-y_i)^p_{th} }$$
+6) **Minkowski**: a p-ésima raíz da soma dos das diferenças dos componentes elevada à p-ésima potência. 
+$$\sqrt[p]{\sum(x_i-y_i)^p}$$
 
 
 Com relação à aglomeração, em cada estágio do processo a distância entre os grupos é recalculada pelo algorítimo de Lance-Willians \cite(https://pdfs.semanticscholar.org/7c16/8b8262acf2ec40a971604f273462136f4835.pdf), em acordo com o método de agrupamento selecionado. Os métodos implementados no R, segundo o pacote $\texttt{dentextend}$, são:"Ward","Single","Median","Centroid" e "Complete". 
 
-Á título de ilustração, na próxima sessão se demonstrará a diferença entre os métodos, assim como sua aplicação para a análise de dados abertos do aplicativo Twitter.
+A título de ilustração, na próxima sessão se demonstrará a diferença entre os métodos, assim como sua aplicação para a análise de dados abertos do aplicativo Twitter.
 
 ### Construindo o Dendrograma
 
-O primeiro passo para a construção do dendrograma para análise saúde mental a partir do Twitter, foi a "limpeza" do conjunto textual selecionado. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras, que recebe o nome de *stopwords*, ao mesmo tempo que não acrescentam valor semantico são muito frequentes por serem compostas por artigos, preposições e pronomes. No caso em questão, utilizou-se o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma @v15
+O primeiro passo para a construção do dendrograma para análise saúde mental a partir do Twitter, foi a "limpeza" do conjunto textual selecionado. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras, que recebe o nome de *stopwords*, ao mesmo tempo que não acrescentam valor semantico são muito frequentes por serem compostas por artigos, preposições e pronomes. No caso em questão, utilizou-se o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma [@v15].
 
 Após a eliminação destas palavras, contruiu-se uma matriz de frequência das palavras e analisou-se as 50 palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. Notou-se que algumas palavras extras poderiam ser removidas como abreviações e gírias que as "stopwords" predefinidas não contemplavam\footnote[^2].
 
@@ -914,15 +916,19 @@ plot(as.phylo(dend5), type="fan")
 
 ## Índice de depressão e tristeza
 
-Um dos objetivos desse trabalho é fornecer um método que seja capaz de identificar se uma pessoa apresenta sinai de depressão através dos seus textos no Twitter. Uma proposta que apresentamos nessa direção é utilizar um índice que leve em consideração a proporção de palavras relacionadas à depressão que cada usuário digitou. Para isso, consideramos a lista de 99 palavras que possuem alguma relação com depressão fornecidas na página da internet \cite(https://adarkershadeofblue.wordpress.com/2011/08/20/99-words-about-depression/). A palavra depressed também foi adicionada à essa lista, uma vez que na análise de redes essa palavras foi observada possuir uma maior relação com sentimentos depressivos que depressive e depression.
+Um dos objetivos desse trabalho é fornecer um método que seja capaz de identificar se uma pessoa apresenta sinais de depressão através dos seus textos no Twitter. Uma proposta que apresentamos nessa direção é utilizar um índice que leva em consideração a proporção de palavras relacionadas à depressão que cada usuário digitou. Para isso, consideramos uma lista de 99 palavras que possuem alguma relação com depressão fornecida na página da internet \cite(https://adarkershadeofblue.wordpress.com/2011/08/20/99-words-about-depression/). A palavra depressed também foi adicionada à essa lista, uma vez que na análise de redes essa palavras foi observada possuir uma maior relação com sentimentos depressivos que depressive e depression.
 
-Considerando para cada usuário $n_{tot}$ o número total de palavras digitadas, desconsiderando stopwords, e $n_{dep}$ o número de palavras que estão presentes na lista de 100 palavras relacionadas à depressão, o índice que nós propomos é dado por
+Considerando para cada usuário $n_{tot}$ o número total de palavras digitadas (desconsiderando stopwords) e $n_{dep}$ o número de palavras que estão presentes na lista de 100 palavras relacionadas à depressão, o índice que nós propomos é dado por
 $$
-\text{dep}_{\text{scr}} = 1 + \frac{1}{n_{\text{dep}}*\log(1-p_{\text{dep}})-1},
+\text{dep}_{\text{scr}} = 1 + \frac{1}{n_{dep}\times\log(1-p_{dep})-1},
 $$
-em que $p_{dep} = n_{dep}/n_{tot}$ é a proporção de palavras relacionadas com depressão do usuário. Pode-se notar que $p_{dep} \rightarrow 0 \Rightarrow dep_{scr} \rightarrow 0$ e $p_{dep} \rightarrow 1 \Rightarrow dep_{scr} \rightarrow 1$, ou seja, quanto mais próximo de um for o valor de $dep_{scr}$ mais indícios a pessoa tem de estar escrevendo sobre algo relacionado à depressão. Vale destacar que se a análise fosse feita somente sobre $p_{dep}$ pessoas que escrevem pouco tenderiam a ter mais indícios de depressão contendo poucas palavras na lista sobre depressão. Ao considerar $dep_{dep}$ ao invés de simplesmente $p_{dep}$, levamos em conta a ideia de que entre duas pessoas com o mesmo valor de $p_{dep}$, aquela com maior número de palavras depressivas $n_{dep}$ deverá ter um índice de depressão maior, enquante se duas pessoas tiverem o mesmo valor de $n_{dep}$, o valor de $dep_{scr}$ seja maior para o indivíduo com maior $p_{dep}$. 
+em que $p_{dep} = n_{dep}/n_{tot}$ é a proporção de palavras relacionadas com depressão do usuário. Pode-se notar que 
+$$
+p_{dep} \rightarrow 0 \Rightarrow \text{dep}_{\text{scr}} \rightarrow 0 \quad\text{e}\quad p_{dep} \rightarrow 1 \Rightarrow \text{dep}_{\text{scr}} \rightarrow 1,
+$$ 
+ou seja, quanto mais próximo de um for o valor de $\text{dep}_{\text{scr}}$, mais indícios a pessoa terá de estar escrevendo sobre algo relacionado à sentimentos de depressão. Vale destacar que se a análise fosse feita somente sobre $p_{dep}$, pessoas que escrevem pouco tenderiam a ter mais indícios de depressão mesmo contendo poucas palavras na lista utilizada. Ao se considerar $\text{dep}_{\text{scr}}$ ao invés de simplesmente $p_{dep}$, levamos em conta a ideia de que entre duas pessoas com o mesmo valor de $p_{dep}$, aquela com maior número de palavras depressivas $n_{dep}$ deverá ter um índice de depressão maior, enquante se duas pessoas tiverem o mesmo valor de $n_{dep}$, o valor de $\text{dep}_{\text{scr}}$ seja maior para o indivíduo com maior $p_{dep}$. 
 
-Um problema com $dep_{scr}$ é que, se $p_{dep}$ tende à uma constante conforme $n_{tot}\rightarrow \infty$, então $n_{dep} \rightarrow \infty \Rightarrow dep_{scr}$, independente do valor limite $p_{dep}$. Por outro lado, como mencionamos anteriormente, para valores finitos de $n_{tot}$ e $n_{dep}$ temos que $dep_{scr}$ fornece critérios de comparação mais adequados que utilizar somente $p_{dep}$. No código abaixo o valor de $dep_{scr}$ foi calculado para cada usuário analisado.
+Um problema com $dep_{scr}$ é que, se $p_{dep}$ tende à uma constante conforme $n_{tot}\rightarrow \infty$, então $n_{dep} \rightarrow \infty \Rightarrow \text{dep}_{\text{scr}} \rightarrow 1$, independente do valor limite de $p_{dep}$. Por outro lado, como mencionamos anteriormente, para valores finitos de $n_{tot}$ e $n_{dep}$ temos que $dep_{scr}$ fornece critérios de comparação mais adequados que utilizar somente $p_{dep}$. No código abaixo o valor de $dep_{scr}$ foi calculado para cada usuário analisado.
 
 <div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
@@ -955,7 +961,7 @@ tidy_dp_index %>% arrange(dep_scr) %>% head(2)  # usuários com menores índices
 ```
 </div>
 
-Abaixo apresentamos os dois usuários que apresentaram os maiores de $dep_{scr}$ e os dois usuários que apresentaram os menores $dep_{scr}$. Analisando trechos dos textos desses usuários, notamos que os dois primeiros apresentam teores bastante depressivos, com uma alta concentração de palavras negativas, diferentemente dos dois últimos textos, que parecem não serem tão expressivamente negativos como os anteriores.
+Abaixo apresentamos os dois usuários que apresentaram os maiores valores de $\text{dep}_{\text{scr}}$ e os dois usuários que apresentaram os menores $\text{dep}_{\text{scr}}$. Analisando trechos dos textos desses usuários, notamos que os dois primeiros apresentam teores bastante depressivos, com uma alta concentração de palavras negativas, diferentemente dos dois últimos textos, que parecem não serem tão expressivamente negativos como os anteriores. Em geral, notamos que $\text{dep}_{\text{scr}}$ permite identificar vários usuários que possuem textos com concentrações relativamente altas de palavras relacionadas à depressão, e consiste em uma nova proposta bastante simples para análise de textos relacionados à depressão, mas que também pode ser aplicado em diferentes tipos de análises de mineração de textos.
 
 <div class="fold s">
 ```{r message=FALSE,echo=TRUE}
