@@ -28,7 +28,7 @@ Sabemos que com a popularização da internet, um enorme volume dados é gerado 
 
 Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoções expressos em texto, e para tal, será preciso criar métricas para contabilização dos mesmos.
 
-No trabalho a seguir, utilizamos o R para tratar estes textos e resolver o nosso problema através da Análise de Sentimentos.
+No trabalho a seguir, utilizamos o R para tratar estes textos e resolver o nosso problema através de diferentes técnicas de mineração de textos, com análise de sentimentos, nuvem de palavras e análise de tópicos, por exemplo. Adicionalmente, propomos uma nova métrica para mensurar o nível de depressão de uma pessoa através dos seus textos no Twitter.
 
 ## Descrição dos dados
 A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. 
@@ -45,7 +45,7 @@ O primeiro passo será realizar a contagem e frequência das palavras chave esco
 
 Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a frequência percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. 
 
-### Núvem de palavras
+### Nuvem de palavras
 
 Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras que são imagens que demonstram de maneira visual a frequência da ocorrência das palavras em um dado texto.
 
@@ -53,7 +53,7 @@ Após criarmos um arquivo com a contagem das palavras, quanto maior for o númer
 
 Para a nossa base de dados foram utilizados tweets da plataforma social "twitter", sendo que foram baixados 30.000(trinta mil) tweets, tendo a partir deles palavras relacionadas a depressão, sendo todas no idioma inglês, como "depression" e "anxiety".
 
-Dado isso foi feita uma separação dos dados na linguagem R e os dados foram transformados em "Data Frame" para manipulação. Depois fazemos todas as limpezas necessárias para que o texto fique uniforme, como deixar todas as letras minísculas, remover os nomes de usuário, tirar pontuação, links e espaços em branco desnecessários, e por fim, números e palavras desnecessárias, como a identificação do aparelho pelo qual foi enviado o tweet.
+Dado isso foi feita uma separação dos dados na linguagem R e os dados foram transformados em "Data Frame" para manipulação. Depois fazemos todas as limpezas necessárias para que o texto fique uniforme, como deixar todas as letras minúsculas, remover os nomes de usuário, tirar pontuação, links e espaços em branco desnecessários, e por fim, números e palavras desnecessárias, como a identificação do aparelho pelo qual foi enviado o tweet.
 
 ## Análise de tópicos
 
@@ -97,11 +97,11 @@ Na aplicação sobre depressão iremos considerar os dicionários de sentimentos
 
 Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras em que são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras, de modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais posiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
 
-Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. Deve haver algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulário são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto de séculos atrás. A análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
+Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. Deve haver algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulários são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto de séculos atrás. A análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
 
-Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a tais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. 
+Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimentos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a tais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. 
 
-Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos ao longo do texto. Note que a quantidade de linhas que serão agrupadas depende do tipo e do tamanho do texto que está sendo análisado. Ainda utilizando o dicionário **bing**, apresentamos uma núvem de palavras de sentimentos, isto é, uma núvem de palavras com distinção entre palavras positivas e negativas. Prosseguimos a análise de sentimentos comparando os três dicionários, de modo a observar se há alguma discrepância em algum deles. 
+Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos ao longo do texto. Note que a quantidade de linhas que serão agrupadas depende do tipo e do tamanho do texto que está sendo análisado. Ainda utilizando o dicionário **bing**, apresentamos uma núvem de palavras de sentimentos, isto é, uma nuvem de palavras com distinção entre palavras positivas e negativas. Prosseguimos a análise de sentimentos comparando os três dicionários, de modo a observar se há alguma discrepância em algum deles. 
 
 ## Dendrogramas
 
@@ -135,15 +135,15 @@ $$\sqrt[p]{\sum(x_i-y_i)^p}$$
 
 Com relação à aglomeração, em cada estágio do processo a distância entre os grupos é recalculada pelo algorítimo de Lance-Willians \cite(https://pdfs.semanticscholar.org/7c16/8b8262acf2ec40a971604f273462136f4835.pdf), em acordo com o método de agrupamento selecionado. Os métodos implementados no R, segundo o pacote $\texttt{dentextend}$, são:"Ward","Single","Median","Centroid" e "Complete". 
 
-A título de ilustração, na próxima sessão se demonstrará a diferença entre os métodos, assim como sua aplicação para a análise de dados abertos do aplicativo Twitter.
+A título de ilustração, na próxima sessão se demonstrará a diferença entre os métodos, assim como sua aplicação para a análise de dados abertos do Twitter.
 
 ### Construindo o Dendrograma
 
-O primeiro passo para a construção do dendrograma para análise saúde mental a partir do Twitter, foi a "limpeza" do conjunto textual selecionado. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras, que recebe o nome de *stopwords*, ao mesmo tempo que não acrescentam valor semantico são muito frequentes por serem compostas por artigos, preposições e pronomes. No caso em questão, utilizou-se o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma [@v15].
+O primeiro passo para a construção do dendrograma para análise saúde mental a partir do Twitter, foi a "limpeza" do conjunto textual selecionado. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras, que recebe o nome de *stopwords*, ao mesmo tempo que não acrescentam valor semântico são muito frequentes por serem compostas por artigos, preposições e pronomes. No caso em questão, utilizou-se o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma [@v15].
 
 Após a eliminação destas palavras, contruiu-se uma matriz de frequência das palavras e analisou-se as 50 palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. Notou-se que algumas palavras extras poderiam ser removidas como abreviações e gírias que as "stopwords" predefinidas não contemplavam\footnote[^2].
 
-O passo seguinte foi a análise gráfica dos termos mais frequentes, a fim de se avaliar a frequências das palavras de forma relativa. O  abaixo representa as 50 palavras mais frequentes da base de dados, realizadas a limpeza previamente definida.
+O passo seguinte foi a análise gráfica dos termos mais frequentes, a fim de se avaliar a frequências das palavras de forma relativa. Na seção seguinte serão representadas as 50 palavras mais frequentes da base de dados, realizando a limpeza previamente definida.
 
 # Resultados e discussões
 
@@ -219,7 +219,7 @@ tweets_tidy_count <- tweets_tidy_df %>%
 ```
 </div>
 
-As núvens de palavras são comuns em contagem de palavras por serem visualmente atrativas e de fácil interpretação. As palavras com maior número de repetição nos documentos são adicionadas de  maneira que miniminiza os espaços em branco de acordo com os tamanhos das palavras, que é proporcional à quantidade de vezes que elas aparecem. 
+As nuvens de palavras são comuns em contagem de palavras por serem visualmente atrativas e de fácil interpretação. As palavras com maior número de repetição nos documentos são adicionadas de  maneira que miniminiza os espaços em branco de acordo com os tamanhos das palavras, que é proporcional à quantidade de vezes que elas aparecem. 
 
 <div class="fold s">
 ```{r, message=FALSE,results='hide',echo=TRUE}
@@ -247,9 +247,9 @@ tweets_tidy_df %>%
 ```
 </div>
 
- No caso em questão observa-se elevada quantidade de palavras de cunho negativo como "anxiety", "sad", "stressed", "shit", "feel", "hate", "lost", "tired" ,"episode" e "fucking. As palavras "feel" e "episode" não necessariamente estão relacionadas a depressão, contudo a análise de bigramas apresentada adiante apresenta evidências de que tais palavras geralmente precedem as palavras "depressed" ou "depressive", formando extpressões como "depressive episode", "fucking depressed" e "feeling depressive." 
+ No caso em questão observa-se elevada quantidade de palavras de cunho negativo como "anxiety", "sad", "stressed", "shit", "feel", "hate", "lost", "tired" ,"episode" e "fucking". As palavras "feel" e "episode" não necessariamente estão relacionadas a depressão, contudo a análise de bigramas apresentada adiante apresenta evidências de que tais palavras geralmente precedem as palavras "depressed" ou "depressive", formando expressões como "depressive episode", "fucking depressed" e "feeling depressive." 
 
-Em seguida é apresentado um histograma da frequência de palavras, geralmente as expressões mais comuns possuem frequência maior, enquanto expressões mais específicas possuem baixa frequencia. O histograma de proporções geralmente evidência o padrão de escrita do autor, onde maior assimetria à direita evidencia a caracteristica do(s) autor(es) de repetir pouco as palavras. 
+Em seguida é apresentado um histograma da frequência de palavras. Geralmente as expressões mais comuns possuem frequência maior, enquanto expressões mais específicas possuem baixa frequencia. O histograma de proporções geralmente evidencia o padrão de escrita do autor, onde maior assimetria à direita evidencia a característica do(s) autor(es) de repetir pouco as palavras. 
 
 <div class="fold s">
 ```{r, message=FALSE,results='hide',echo=TRUE,warning=FALSE}
@@ -285,7 +285,7 @@ ggplot(aes(n/sum(n))) +
 ```
 </div>
 
-O histograma para o conjunto de dados analisados está de acordo com a literatura, isto é, mostra evidencias de que os usuários tendem a usar muitas palavras comuns, o que explica a barra próxima do 0. Ainda em consonância com a literatura é possível observar que a contegem de palavras com proporções maiores decresce rapidamente, evidenciando que no conjunto de dados analisados os usuários possuem a característica de repetir pouco as palavras.  
+O histograma para o conjunto de dados analisados está de acordo com a literatura, isto é, mostra evidências de que os usuários tendem a usar muitas palavras comuns, o que explica a barra próxima do 0. Ainda em consonância com a literatura é possível observar que a contagem de palavras com proporções maiores decresce rapidamente, evidenciando que no conjunto de dados analisados os usuários possuem a característica de repetir pouco as palavras.  
 
 ## Análise de sentimentos
 
@@ -744,7 +744,7 @@ term_freq <-sort(term_freq,decreasing = T) # lista com as top palavras em orderm
 ```
 </div>
 
-Na análise de contagem de palavras as expressões **depressed**, **depression** e **depressive** são as mais frequentes, fato que era esperado devido ao fato de terem visto que foram utilizadas como filtro para a seleção dos tweets que compõem a base de dados do trabalho. A fim de se analisar de forma mais precisa a frequência deste subconjunto de dados, optou-se por retirar estas três observações a fim de tornar a escala de frequência da demais palavras mais clara, como pode-se observar abaixo. Para uma análise de dendrograma a contagem de palavras é de grande signigicância à medida em que os **clusters** são formados a partir das mesmas. O método selecionado de cálculo das distâncias entre as observações, no caso a distância entre as contagens, foi o euclidiano. Optou-se por utilizar o dendograma circular por apresentar ser mais atrativo em termos visuais e de transmissão de informação. 
+Na análise de contagem de palavras as expressões **depressed**, **depression** e **depressive** são as mais frequentes, fato que era esperado devido ao fato de terem visto que foram utilizadas como filtro para a seleção dos tweets que compõem a base de dados do trabalho. A fim de se analisar de forma mais precisa a frequência deste subconjunto de dados, optou-se por retirar estas três observações a fim de tornar a escala de frequência da demais palavras mais clara, como pode-se observar abaixo. Para uma análise de dendrograma a contagem de palavras é de grande significância à medida em que os **clusters** são formados a partir das mesmas. O método selecionado de cálculo das distâncias entre as observações, no caso a distância entre as contagens, foi o euclidiano. Optou-se por utilizar o dendograma circular por ser mais atrativo em termos visuais e de transmissão de informação. 
 
 <div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
@@ -777,7 +777,7 @@ p_{\text{dep}} \rightarrow 0 \Rightarrow \text{dep}_{\text{scr}} \rightarrow 0 \
 $$ 
 ou seja, quanto mais próximo de um for o valor de $\text{dep}_{\text{scr}}$, mais indícios a pessoa terá de estar escrevendo sobre algo relacionado à sentimentos de depressão. Vale destacar que se a análise fosse feita somente sobre $p_{\text{dep}}$, pessoas que escrevem pouco tenderiam a ter mais indícios de depressão mesmo contendo poucas palavras na lista utilizada. Ao se considerar $\text{dep}_{\text{scr}}$ ao invés de simplesmente $p_{\text{dep}}$, levamos em conta a ideia de que entre duas pessoas com o mesmo valor de $p_{\text{dep}}$, aquela com maior número de palavras depressivas $n_{\text{dep}}$ deverá ter um índice de depressão maior, enquante se duas pessoas tiverem o mesmo valor de $n_{\text{dep}}$, o valor de $\text{dep}_{\text{scr}}$ seja maior para o indivíduo com maior $p_{\text{dep}}$. 
 
-Um problema com $dep_{\text{scr}}$ é que, se $p_{\text{dep}}$ tende à uma constante conforme $n_{\text{tot}}\rightarrow \infty$, então $n_{\text{dep}} \rightarrow \infty \Rightarrow \text{dep}_{\text{scr}} \rightarrow 1$, independente do valor limite de $p_{\text{dep}}$. Por outro lado, como mencionamos anteriormente, para valores finitos de $n_{\text{tot}}$ e $n_{\text{dep}}$ temos que $dep_{\text{scr}}$ fornece critérios de comparação mais adequados que utilizar somente $p_{\text{dep}}$. No código abaixo o valor de $dep_{\text{scr}}$ foi calculado para cada usuário analisado.
+Um problema com $\text{dep}_{\text{scr}}$ é que, se $p_{\text{dep}}$ tende à uma constante conforme $n_{\text{tot}}\rightarrow \infty$, então $n_{\text{dep}} \rightarrow \infty \Rightarrow \text{dep}_{\text{scr}} \rightarrow 1$, independente do valor limite de $p_{\text{dep}}$. Por outro lado, como mencionamos anteriormente, para valores finitos de $n_{\text{tot}}$ e $n_{\text{dep}}$ temos que $\text{dep}_{\text{scr}}$ fornece critérios de comparação mais adequados que utilizar somente $p_{\text{dep}}$. No código abaixo o valor de $\text{dep}_{\text{scr}}$ foi calculado para cada usuário analisado.
 
 <div class="fold s">
 ```{r message=FALSE,echo=TRUE}
