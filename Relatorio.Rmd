@@ -31,11 +31,11 @@ Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoç
 No trabalho a seguir, utilizamos o R para tratar estes textos e resolver o nosso problema através de diferentes técnicas de mineração de textos, com análise de sentimentos, nuvem de palavras e análise de tópicos, por exemplo. Adicionalmente, propomos uma nova métrica para mensurar o nível de depressão de uma pessoa através dos seus textos no Twitter.
 
 ## Descrição dos dados
-A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. 
+A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". 
 
-O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". 
+A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com as técnicas de manipulação de textos  $\texttt{tidy}$ e $\texttt{tm}$.
 
-A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com os métodos  $\texttt{tidy}$ e $\texttt{tm}$.
+Quando se deseja aplicar técnicas de mineração de texto, a "limpeza" do conjunto textual selecionado é de fundamental importância. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras geralmente recebe o nome de *stopwords*. As *stopwords*  são problemáticas pois ao mesmo tempo que não acrescentam valor semântico, são muito frequentes\footnote{por serem compostos por artigos, preposições e pronomes.}. No caso em questão, utilizou-se , primeiramente, o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma @v15, contudo é relevante mencionar que em etapas posteriores novas palavras foram incluídas na lista de *stopwords*.
 
 ## Contagem e frequência de palavras
 
@@ -49,15 +49,15 @@ Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco d
 
 Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras que são imagens que demonstram de maneira visual a frequência da ocorrência das palavras em um dado texto.
 
-Após criarmos um arquivo com a contagem das palavras, quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras. Inicialmente, para realizar esse tipo de análise devemos instalar um arquivo $\texttt{Word.cloud}$. Um WordCloud é feito com as palavras mais utilizadas em um determinado texto ou documento, de forma com que fique visual e chamativo para as palavras mais importantes.
+Após criarmos um arquivo com a contagem das palavras, quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras.  As wordclouds são feitas com as palavras mais utilizadas em um determinado texto ou documento, de forma que o aspecto visual fique concentrado nas palavras mais importantes.
 
 Para a nossa base de dados foram utilizados tweets da plataforma social "twitter", sendo que foram baixados 30.000(trinta mil) tweets, tendo a partir deles palavras relacionadas a depressão, sendo todas no idioma inglês, como "depression" e "anxiety".
 
-Dado isso foi feita uma separação dos dados na linguagem R e os dados foram transformados em "Data Frame" para manipulação. Depois fazemos todas as limpezas necessárias para que o texto fique uniforme, como deixar todas as letras minúsculas, remover os nomes de usuário, tirar pontuação, links e espaços em branco desnecessários, e por fim, números e palavras desnecessárias, como a identificação do aparelho pelo qual foi enviado o tweet.
+Dado isso foi feita uma separação dos dados na linguagem R e os dados foram transformados em "Data Frame" para manipulação. Depois fizemos todas as limpezas necessárias para que o texto ficasse uniforme, como deixar todas as letras minúsculas, remover os nomes de usuário, tirar pontuação, links e espaços em branco desnecessários e, por fim, números e palavras desnecessárias, como a identificação do aparelho pelo qual foi enviado o tweet.
 
 ## Análise de tópicos
 
-Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetenficar ou validar grupos entre os documentos analisados.  
+Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetificar ou validar grupos entre os documentos analisados.  
 
 Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposto por @blei2003latent. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam @berry2010text.
 
@@ -97,53 +97,42 @@ Na aplicação sobre depressão iremos considerar os dicionários de sentimentos
 
 Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras em que são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras, de modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais posiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
 
-Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. Deve haver algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulários são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto de séculos atrás. A análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
+Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. Geralmente há algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulários são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto muito antigo, de séculos atrás por exemplo. Tal análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
 
-Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimentos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a tais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. 
+Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimentos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a quais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. 
 
 Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos ao longo do texto. Note que a quantidade de linhas que serão agrupadas depende do tipo e do tamanho do texto que está sendo análisado. Ainda utilizando o dicionário **bing**, apresentamos uma núvem de palavras de sentimentos, isto é, uma nuvem de palavras com distinção entre palavras positivas e negativas. Prosseguimos a análise de sentimentos comparando os três dicionários, de modo a observar se há alguma discrepância em algum deles. 
 
+Prosseguimos com a análise de sentimentos com bigramas, isto é, consideramos grupos de duas palavras ao invés de uma. Os bigramas são interessantes pois certa palavra precedida de outra pode alterar completamente o sentido da expressão. O exemplo mais claro é de uma palavra a princípio indica alguma afirmação sobre alguma coisa quando analisada enquanto unigrama, mas ao observar os bigramas tal palavra é precedida por "not", alterando o entendimento que havia sido feito pelo unigrama. No contexto de depressão os bigramas são de grande utilidade pois nos permitem observar quais palavras geralmente precedem as palavras "depression", "depressive" ou "depressed" e, deste modo, podemos avaliar com mais clareza os sentimentos associados a essas palavras. Neste mesmo sentido realizamos um estudo de correlação entre palavras de modo  a avaliar a correção entre palavras em termos de proximidade no texto. Ferramenta útil para melhorar o entendimento dos sentimentos expressos nos tweets.
+
 ## Dendrogramas
 
-De acordo com o dicionário Merriam-Webster[^1], um dendograma se define como um diagrama em árvore que representa uma hierarquia de grupos de objetos, baseada em sua similiaridade ou características em comum.
-
-No caso da análise textual, as palavras são os elementos que compõem os grupos do diagrama. A distância medida entre elas, por sua vez, depende da frequência de ocorrência de cada palavra. Definidos os grupos e sua respectiva hierarquia, o objetivo do dendrograma é facilitar a associação entre as palavras a fim de se extrair informações relevantes sobre o texto [@t17].
+De acordo com o dicionário Merriam-Webster[^1], um dendograma se define como um diagrama em árvore que representa uma hierarquia de grupos de objetos, baseada em sua similiaridade ou características em comum. No caso dos dendogramas textuais, as palavras são os elementos que compõem os grupos do diagrama. A distância medida entre elas, por sua vez, depende da frequência de ocorrência de cada palavra. Definidos os grupos e sua respectiva hierarquia, o objetivo do dendrograma é facilitar a associação entre as palavras a fim de se extrair informações relevantes sobre o texto [@t17].
 
 Diversos métodos podem ser utilizados para o agrupamento de objetos. O dendrograma é o resultado em diagrama de um método aglomerativo hierárquico. Neste método, cada objeto da análise é inicialmente considerado como um grupo individual. Em seguida, objetos com pouco distância entre si são aglomerados em grupos maiores. Estes  grupos maiores, por seu turno, são reagrupados, novamente segundo a distância entre seus objetos. Ao final do processo, todos os grupos se aglomeram em apenas um. A vizualização deste processo é o próprio dendrograma \cite{http://www.stewartschultz.com/statistics/books/Cambridge%20Dictionary%20Statistics%204th.pdf}.
 
+No R, existem seis métodos de mensuração da distância entre os objetos, no caso, a frequência das palavras e oito métodos de aglomeração. Dentre as distâncias, podemos listar:
 
-No R, existem seis métodos de mensuração da distância entre os objetos, no caso, a frequência das palavras e oito métodos de aglomeração. Dentre os métodos de cálculo da distância, podemos relevar
-
-
-1) **Euclidiana**: o método padrão de distância entre vetores 
+1) **Euclidiana**: o método padrão de distância entre vetores; 
 $$\sum{(x_i- y_i)^2}$$
 
-2) **Máximos**: mede a distância máxima entre componentes de dois vetores:
+2) **Máximos**: mede a distância máxima entre componentes de dois vetores;
 $$\max{|x_i - y_i|}$$
 
-3) **Manhattan**: mede a distância absoluta entre dois vetores 
+3) **Manhattan**: mede a distância absoluta entre dois vetores; 
 $$\sum{|x_i- y_i|}$$
 
-4) **Canberra**: definido pela seguinte expressão, onde termos nulos do denominador são excluídos da amostra: 
+4) **Canberra**: definido pela seguinte expressão, onde termos nulos do denominador são excluídos da amostra;
 $$\sum\frac{|x_i - y_i|}{ |x_i + y_i|}.$$ 
 
-5) **Binário**: A distância é a proporção de vetores considerados binários, (*bits*), em que apenas um dos vetores está presente dentre aqueles em que apenas os vetores 1 estão incluídos.
+5) **Binário**: A distância é a proporção de vetores considerados binários, (*bits*), em que apenas um dos vetores está presente dentre aqueles em que apenas os vetores 1 estão incluídos e 
 
 6) **Minkowski**: a p-ésima raíz da soma dos das diferenças dos componentes elevada à p-ésima potência. 
 $$\sqrt[p]{\sum(x_i-y_i)^p}$$
 
-
 Com relação à aglomeração, em cada estágio do processo a distância entre os grupos é recalculada pelo algorítimo de Lance-Willians \cite(https://pdfs.semanticscholar.org/7c16/8b8262acf2ec40a971604f273462136f4835.pdf), em acordo com o método de agrupamento selecionado. Os métodos implementados no R, segundo o pacote $\texttt{dentextend}$, são:"Ward","Single","Median","Centroid" e "Complete". 
 
-A título de ilustração, na próxima sessão se demonstrará a diferença entre os métodos, assim como sua aplicação para a análise de dados abertos do Twitter.
-
-### Construindo o Dendrograma
-
-O primeiro passo para a construção do dendrograma para análise saúde mental a partir do Twitter, foi a "limpeza" do conjunto textual selecionado. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras, que recebe o nome de *stopwords*, ao mesmo tempo que não acrescentam valor semântico são muito frequentes por serem compostas por artigos, preposições e pronomes. No caso em questão, utilizou-se o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma [@v15].
-
-Após a eliminação destas palavras, contruiu-se uma matriz de frequência das palavras e analisou-se as 50 palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. Notou-se que algumas palavras extras poderiam ser removidas como abreviações e gírias que as "stopwords" predefinidas não contemplavam\footnote[^2].
-
-O passo seguinte foi a análise gráfica dos termos mais frequentes, a fim de se avaliar a frequências das palavras de forma relativa. Na seção seguinte serão representadas as 50 palavras mais frequentes da base de dados, realizando a limpeza previamente definida.
+O processo de construção do dendograma consiste, após a eliminação destas palavras, de contruir  uma matriz de frequência das palavras e selecionar as $n$  palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. As etapas seguintes são: a escolha da distância, do método de aglomeração e, por fim, do modo de apresentação do dendograma. No caso em questão utilizou-se a distância euclidiana, o método de aglomeração conhecido como "complete" e, como forma de apresentação, o dendograma circular por ser visualmente mais atrativo e informativo. 
 
 # Resultados e discussões
 
