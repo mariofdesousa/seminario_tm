@@ -835,7 +835,8 @@ print(c(mai1,mai2,mei1,mei2))
 
 # Considerações finais
 
-aaa
+Encerramos este trabalho, atingindo o objetivo inicial de identificação e classificação de sentimentos dos indivíduos, através da análise computacional, aplicada a uma base de dados extraida de redes sociais (Twitter).
+Podemos expandir esta aplicação, replicando as metodologias utilizadas, em outras fontes diferentes, visando não somente a classificação de índividuos ou produtos, mas também segmentação e/ou construção de modelos para estimativas futuras. 
 
 # Referências bibliográficas
 
