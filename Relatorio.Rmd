@@ -25,9 +25,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 O objetivo do trabalho é analisar as formas pelas quais são expressados sentimentos negativos nas redes sociais. Isso se dá devido à grande importância da análise desses sentimentos, já que segundo a Organização Mundial de Saúde, estima-se que 300 milhões de pessoas sofram de depressão ao redor do mundo, o que representa um incremento de 18% entre 2005 e 2015.Além disso, o WHO[^1] mostra que no pior dos casos, a depressão leva ao suicídio, sendo que é estimado que 800 000 pessoas morram de suicídio todos os anos, sendo a segunda maior causa de morte entre jovens de 15 a 29 anos. 
 
-Além disso, a depressão pode ter vários tipos de impactos na sociedade, \cite{marcotte01}, estimam os custos de emprego e renda da depressão, mostrando que existem diversos tipos de custos além de tratamentos e remédios, já que pessoas com depressão estão mais propensas a perder seu emprego e têm mais dificuldade de inserção no mercado de trabalho.
+Além disso, a depressão pode ter vários tipos de impactos na sociedade \cite{marcotte01}, estimam os custos de emprego e renda da depressão, mostrando que existem diversos tipos de custos além de tratamentos e remédios, já que pessoas com depressão estão mais propensas a perder seu emprego e têm mais dificuldade de inserção no mercado de trabalho.
 
-Mas na incapacidade de identificar as pessoas com algum caso clínico de depressão, foram utilizados dados de palavras relacionadas à sentimentos negativos na rede social "twitter", que por ser considerado um *"microblog"* no qual as pessoas postam constantemente e, segundo o site "Statista"[^2], tinha 328 milhões de usuários até o fim de março de 2017, sendo que o mesmo site mostrou que é a rede que teve o maior engajamento nos primeiros quatro meses do mesmo ano.
+Mas na incapacidade de identificar as pessoas com algum caso clínico de depressão, foram utilizados dados de palavras relacionadas à sentimentos negativos na rede social "twitter", por ser considerado um *"microblog"* no qual as pessoas postam constantemente e, segundo o site "Statista"[^2], tinha 328 milhões de usuários até o fim de março de 2017, sendo que o mesmo site mostrou que é a rede que teve o maior engajamento nos primeiros quatro meses do mesmo ano.
 
 Portanto, foi a Rede Social que melhor se ajustava às necessidades de busca textual sobre os sentimentos negativos e como eles eram expressados socialmente pelas pessoas. Na análise foi feita a busca no idioma inglês devido à maior disponibilidade de dados.
 
@@ -35,7 +35,7 @@ Além dessa introdução, o trabalho é dividido em metodologia, nos resultados 
 
 # Metodologia
 
-Sabemos que com a popularização da internet, um enorme volume dados é gerado a cada minuto. Durante anos, aprendemos a tabular e quantificar variáveis acomodadas em bancos de dados, porém os tempos são outros.
+Sabemos que com a popularização da internet, um enorme volume de dados é gerado a cada minuto. Durante anos, aprendemos a tabular e quantificar variáveis acomodadas em bancos de dados, porém os tempos são outros.
 
 Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoções expressos em texto, e para tal, será preciso criar métricas para contabilização dos mesmos.
 
@@ -46,13 +46,13 @@ A base de dados utilizada contém 30000 tweets extraídos com auxílio da funç�
 
 A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com as técnicas de manipulação de textos  $\texttt{tidy}$ e $\texttt{tm}$.
 
-Quando se deseja aplicar técnicas de mineração de texto, a "limpeza" do conjunto textual selecionado é de fundamental importância. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras geralmente recebe o nome de *stopwords*. As *stopwords*  são problemáticas pois ao mesmo tempo que não acrescentam valor semântico, são muito frequentes\footnote{por serem compostos por artigos, preposições e pronomes.}. No caso em questão, utilizou-se , primeiramente, o método clássico, onde se utilzia uma lista pré-concebida de palavras para cada idioma @v15, contudo é relevante mencionar que em etapas posteriores novas palavras foram incluídas na lista de *stopwords*.
+Quando se deseja aplicar técnicas de mineração de texto, a "limpeza" do conjunto textual selecionado é de fundamental importância. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras geralmente recebe o nome de *stopwords*. As *stopwords*  são problemáticas pois ao mesmo tempo que não acrescentam valor semântico, são muito frequentes\footnote{por serem compostos por artigos, preposições e pronomes.}. No caso em questão, utilizou-se , primeiramente, o método clássico, onde se utiliza uma lista pré-concebida de palavras para cada idioma @v15, contudo é relevante mencionar que em etapas posteriores novas palavras foram incluídas na lista de *stopwords*.
 
 ## Contagem e frequência de palavras
 
 Segundo @gomes2013text, o desafio é saber como manipular essa grande quantidade de informação gerada e investigar como as organizações podem se beneficiar dessas informações, considerando que 80% das informações das organizações estão contidas em documentos de texto [@Tan99textmining].
 
-O primeiro passo será realizar a contagem e frequência das palavras chave escolhidas pelo grupo.
+O primeiro passo será realizar a contagem e calcular a frequência das palavras chave escolhidas pelo grupo.
 
 Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco de dados pré estabelecido, é possível calcular a frequência percentual, das palavras e utilizar o pacote $\texttt{ggplot2}$ para elaboração de um histograma para visualização. 
 
@@ -64,11 +64,11 @@ Após criarmos um arquivo com a contagem das palavras, quanto maior for o númer
 
 Para a nossa base de dados foram utilizados tweets da plataforma social "twitter", sendo que foram baixados 30.000(trinta mil) tweets, tendo a partir deles palavras relacionadas a depressão, sendo todas no idioma inglês, como "depression" e "anxiety".
 
-Dado isso foi feita uma separação dos dados na linguagem R e os dados foram transformados em "Data Frame" para manipulação. Depois fizemos todas as limpezas necessárias para que o texto ficasse uniforme, como deixar todas as letras minúsculas, tirar pontuação, links e espaços em branco desnecessários e, por fim, números e palavras desnecessárias.
+Como mencionado anteriormente, nosso dados foram obtidos da plataforma Twitter diretamente no programa R. Dado isso foi feita uma separação dos dados e os mesmos foram transformados em "Data Frame" para manipulação. Depois fizemos todas as limpezas necessárias para que o texto ficasse uniforme, como deixar todas as letras minúsculas, tirar pontuação, links e espaços em branco desnecessários e, por fim, números e palavras desnecessárias.
 
 ## Análise de tópicos
 
-Um interesse usual em análises de grandes volumes de textos é classicar os documentos em diferentes tópicos, permitindo idetificar ou validar grupos entre os documentos analisados.  
+Um interesse usual em análises de grandes volumes de textos é classificar os documentos em diferentes tópicos, permitindo identificar ou validar grupos entre os documentos analisados.  
 
 Uma forma de realizar esse tipo de análise é utilizar o método de alocação latente de Dirichlet (LDA, na sigla em inglês), que foi proposto por @blei2003latent. Esse método é bastante conhecido na literatura de mineração de texto pela sua eficiência, já tendo sido aplicado em análises de e-mails, livros digitais e notícias, por exemplo, como destacam @berry2010text.
 
@@ -76,7 +76,7 @@ As principais características do LDA, como apresentam @Silge2017Text, são as s
 
 * Documentos diferentes são formados por misturas de tópicos: Dados dois documentos $A$ e $B$, e tópicos distintos 1 e 2, podemos ter que o $A$ é formado em 75% por conteúdo sobre o tópico 1 e em 25% sobre o tópico 2, enquanto $B$ é formado em 40% sobre o tópico 1 e 60% sobre o tópico 2, por exemplo.
 
-* Diferentes palavras podem fazer parte de diferentes tópicos: a palavra "estudante" pode estar mais associada a um tópico sobre universidades enquanto que "cliente" pode ser mais associado a um tópico sobre empresas, mas o termo "dados" pode estar relacionado de maneira similar a ambos esses tópicos.
+* Diferentes palavras podem fazer parte de diferentes tópicos: a palavra "estudante" pode estar mais associada a um tópico sobre universidades enquanto que "cliente" pode ser mais associada a um tópico sobre empresas, mas o termo "dados" pode estar relacionado de maneira similar a ambos esses tópicos.
 
 Para exemplificar as suposições do modelo LDA vamos considerar as seguintes notações: uma palavra $w$ é uma unidade discreta de um conjunto que forma o vocabulário utilizado; um documento $\mathbf{w} = \left(w_1,\ldots,w_N\right)$ é um conjunto de $N$ palavras; um corpo $D=\left\{\mathbf{w}_1,\ldots,\mathbf{w}_M\right\}$ é um conjunto de $M$ documentos. Adicionalmente, no LDA o número de tópicos existentes é assumido conhecido, mas os tópicos em si são variáveis latentes que não conhecemos e desejamos estimar. Dessa maneira, @blei2003latent consideram as seguintes suposições na geração do corpo:
 
@@ -89,13 +89,13 @@ Para exemplificar as suposições do modelo LDA vamos considerar as seguintes no
 + Sorteia-se uma palavra $w_n$ de $p\left(w_n|z_n,\beta\right)$, que segue uma distribuição multinomial cujas probabilidades são condicionadas no tópico $z_n$ e em um vetor desconhecido de parâmetros $\beta$.
 
 
-A aplicação do LDA apresentada por @blei2003latent é baseada em um modelo Bayesiano com três níveis hierárquicos, e permite estimar a probabilidade que cada palavra tem de pertencer à cada um dos tópicos, bem como estimar a probabilidade de cada documento ser sobre cada tópico.
+A aplicação do LDA apresentada por @blei2003latent é baseada em um modelo Bayesiano com três níveis hierárquicos, e permite estimar a probabilidade que cada tópico tem de conter cada uma das palavras, bem como estimar a probabilidade de cada documento ser sobre cada tópico.
 
 No programa $\texttt{R}$ a análise de tópicos pode ser realizada através do pacote $\texttt{topicmodels}$, utilizando a função $\texttt{LDA}$. Uma aplicação dessa função do $\texttt{R}$ é fornecida por @Silge2017Text em um exemplo onde livros distintos são tratados como tópicos e seus respectivos capítulos como documentos; no exemplo dos autores, mostra-se que o LDA consegue classificar quase todos capítulos corretamente em seus respectivos livros, demonstrando a eficiência do método.
 
 ## Análise de sentimentos
 
-Em análise de sentimentos o principal objetivo consiste em fazer "inferência" sobre sentimetos expressos em forma de texto. @messias2017 citam algumas das recentes aplicações da referida metodologia, sendo as principais:
+Em análise de sentimentos o principal objetivo consiste em fazer "inferência" sobre sentimentos expressos em forma de texto. @messias2017 citam algumas das recentes aplicações da referida metodologia, sendo as principais:
 
 * Monitorar a reputação de alguma empresa ou marca;
 * Fornecer perspectivas analíticas para investidores sobre determinado mercado (se certo mercado tem potencial ou não);
@@ -106,21 +106,21 @@ Em análise de sentimentos o principal objetivo consiste em fazer "inferência" 
 
 Na aplicação sobre depressão iremos considerar os dicionários de sentimentos **afinn** [@afinn2011], **bing** [@bing2005] e **nrc** [@nrc2013], por estarem disponíveis no R. 
 
-Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras em que são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras, de modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais posiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
+Os três dicionários são compostos por unigramas, i.e., palavras únicas. Os vocabulários contém palavras às quais são associados scores relativos a sentimentos positivos ou negativos. No caso do **nrc** há associação de palavras a sentimentos como alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto. Esta classificação é feita de modo binário (sim ou não), se determinada palavra corresponde a determinado sentimento. Já no vocabulário **bing** as palavras são classificadas, também de modo binário, porém não há distinção de sentimentos. As palavras ou são associadas a sentimentos positivos ou a negativos. Por fim, o vocabulário **afinn** atribui scores que vão de -5 a 5 para as palavras, de modo que quanto mais próximo de -5 mais negativa é aquela palavra e, de modo análogo, quanto mais próximo de 5 mais positiva é a palavra. Os três vocabulários estão disponívels no $\texttt{R}$ no pacote $\texttt{tidytext}$. 
 
 Geralmente os dicionários são elaborados pelos próprios autores com auxílio de crowdsourcing. Geralmente há algum tipo de validação cruzada para testar o dicionário criado. Neste contexto fica evidente que os vocabulários são contemporâneos, ou seja, não é recomendado aplicar um dicionário de sentimentos atual para analisar um texto muito antigo, de séculos atrás por exemplo. Tal análise pode ser feita, mas devem ser tomados os devidos cuidados ao analisar os achados.
 
 Iniciamos a análise de sentimentos com o vocabulário **nrc** para obtermos palavras relacionadas a cada um dos sentimentos, sendo eles alegria, raiva, tristeza, negatividade, surpresa, medo e desgosto, de modo que obtemos gráficos de contagem de palavras para cada um deles. Essa técnica permite avaliar quais palavras estão associadas a quais sentimentos no contexto de depressão. Prosseguimos a análise de sentimentos com o dicionário **bing**, sendo possível construir índices baseados nos tipos de palavras (positiva ou negativa) e na quantidade de ocorrência das mesmas em um grupo de $n$ linhas. 
 
-Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos ao longo do texto. Note que a quantidade de linhas que serão agrupadas depende do tipo e do tamanho do texto que está sendo análisado. Ainda utilizando o dicionário **bing**, apresentamos uma núvem de palavras de sentimentos, isto é, uma nuvem de palavras com distinção entre palavras positivas e negativas. Prosseguimos a análise de sentimentos comparando os três dicionários, de modo a observar se há alguma discrepância em algum deles. 
+Esse tipo de técnica permite avaliar alterações, caso existam, de sentimentos ao longo do texto. Note que a quantidade de linhas que serão agrupadas depende do tipo e do tamanho do texto que está sendo analisado. Ainda utilizando o dicionário **bing**, apresentamos uma nuvem de palavras de sentimentos, isto é, uma nuvem de palavras com distinção entre palavras positivas e negativas. Prosseguimos a análise de sentimentos comparando os três dicionários, de modo a observar se há alguma discrepância em algum deles. 
 
-Prosseguimos com a análise de sentimentos com bigramas, isto é, consideramos grupos de duas palavras ao invés de uma. Os bigramas são interessantes pois certa palavra precedida de outra pode alterar completamente o sentido da expressão. O exemplo mais claro é de uma palavra a princípio indica alguma afirmação sobre alguma coisa quando analisada enquanto unigrama, mas ao observar os bigramas tal palavra é precedida por "not", alterando o entendimento que havia sido feito pelo unigrama. No contexto de depressão os bigramas são de grande utilidade pois nos permitem observar quais palavras geralmente precedem as palavras "depression", "depressive" ou "depressed" e, deste modo, podemos avaliar com mais clareza os sentimentos associados a essas palavras. Neste mesmo sentido realizamos um estudo de correlação entre palavras de modo  a avaliar a correção entre palavras em termos de proximidade no texto. Ferramenta útil para melhorar o entendimento dos sentimentos expressos nos tweets.
+Prosseguimos com a análise de sentimentos com bigramas, isto é, consideramos grupos de duas palavras ao invés de uma. Os bigramas são interessantes pois certa palavra precedida de outra pode alterar completamente o sentido da expressão. O exemplo mais claro é de uma palavra que a princípio indica alguma afirmação sobre alguma coisa quando analisada enquanto unigrama, mas ao observar os bigramas tal palavra é precedida por "not", alterando o entendimento que havia sido feito pelo unigrama. No contexto de depressão os bigramas são de grande utilidade pois nos permitem observar quais palavras geralmente precedem as palavras "depression", "depressive" ou "depressed" e, deste modo, podemos avaliar com mais clareza os sentimentos associados a essas palavras. Neste mesmo sentido realizamos um estudo de correlação entre palavras de modo  a avaliar a correlação entre palavras em termos de proximidade no texto. Ferramenta útil para melhorar o entendimento dos sentimentos expressos nos tweets.
 
 ## Dendrogramas
 
 De acordo com o dicionário Merriam-Webster[^3], um dendograma se define como um diagrama em árvore que representa uma hierarquia de grupos de objetos, baseada em sua similiaridade ou características em comum. No caso dos dendogramas textuais, as palavras são os elementos que compõem os grupos do diagrama. A distância ou semelhança entre elas, por sua vez, é medida pela frequência de cada palavra. Definidos os grupos e sua respectiva hierarquia, o objetivo do dendrograma é facilitar a associação entre as palavras a fim de se extrair informações relevantes sobre o texto [@t17].
 
-Diversos métodos podem ser utilizados para o agrupamento de objetos. O dendrograma é o resultado em diagrama de um método aglomerativo hierárquico. Neste método, cada objeto da análise é inicialmente considerado como um grupo individual. Em seguida, objetos com pouco distância entre si são aglomerados em grupos maiores. Estes  grupos maiores, por seu turno, são reagrupados, novamente segundo a distância entre seus objetos. Ao final do processo, todos os grupos se aglomeram em apenas um. A vizualização deste processo é o próprio dendrograma[^4].
+Diversos métodos podem ser utilizados para o agrupamento de objetos. O dendrograma é o resultado em diagrama de um método aglomerativo hierárquico. Neste método, cada objeto da análise é inicialmente considerado como um grupo individual. Em seguida, objetos com pouca distância entre si são aglomerados em grupos maiores. Estes  grupos maiores, por seu turno, são reagrupados, novamente segundo a distância entre seus objetos. Ao final do processo, todos os grupos se aglomeram em apenas um. A vizualização deste processo é o próprio dendrograma[^4].
 
 Na função $\texttt{dist}$, disponível no R, existem seis métodos de mensuração da distância entre os objetos (palavras) e oito métodos de aglomeração. Dentre as distâncias, podemos listar:
 
@@ -141,9 +141,9 @@ $$\sum\frac{|x_i - y_i|}{ |x_i + y_i|}.$$
 6) **Minkowski**: a p-ésima raíz da soma dos das diferenças dos componentes elevada à p-ésima potência. 
 $$\sqrt[p]{\sum(x_i-y_i)^p}$$
 
-Com relação à aglomeração, em cada estágio do processo a distância entre os grupos é recalculada pelo algorítimo de Lance-Willians \cite(https://pdfs.semanticscholar.org/7c16/8b8262acf2ec40a971604f273462136f4835.pdf), em acordo com o método de agrupamento selecionado. Os métodos implementados no R, segundo o pacote $\texttt{dentextend}$, são:"Ward","Single","Median","Centroid" e "Complete". 
+Com relação à aglomeração, em cada estágio do processo a distância entre os grupos é recalculada pelo algoritmo de Lance-Willians \cite(https://pdfs.semanticscholar.org/7c16/8b8262acf2ec40a971604f273462136f4835.pdf), em acordo com o método de agrupamento selecionado. Os métodos implementados no R, segundo o pacote $\texttt{dentextend}$, são:"Ward","Single","Median","Centroid" e "Complete". 
 
-O processo de construção do dendograma consiste, após a eliminação destas palavras, de contruir  uma matriz de frequência das palavras e selecionar as $n$  palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. As etapas seguintes são: a escolha da distância, do método de aglomeração e, por fim, do modo de apresentação do dendograma. No caso em questão utilizou-se a distância euclidiana, o método de aglomeração conhecido como "complete" e, como forma de apresentação, o dendograma circular por ser visualmente mais atrativo e informativo. 
+O processo de construção do dendograma consiste, após a eliminação destas palavras, de construir uma matriz de frequências das palavras e selecionar as $n$  palavras mais frequentes, número estimado como parâmetro máximo para a representação de um dendrograma. As etapas seguintes são: a escolha da distância, do método de aglomeração e, por fim, do modo de apresentação do dendograma. No caso em questão utilizou-se a distância euclidiana, o método de aglomeração conhecido como "complete" e, como forma de apresentação, o dendograma circular por ser visualmente mais atrativo e informativo. 
 
 [^1]:WHO, “Depression, let's talk” in The World Health Report 2001, 2001, http://www.who.int/mental_health/management/depression/en/.
 [^2]:https://www.statista.com/statistics/282087/number-of-monthly-active-twitter-users/, acesso em 22/06/2017.
@@ -254,7 +254,7 @@ tweets_tidy_df %>%
 
  No caso em questão observa-se elevada quantidade de palavras de cunho negativo como "anxiety", "sad", "stressed", "shit", "feel", "hate", "lost", "tired" ,"episode" e "fucking". As palavras "feel" e "episode" não necessariamente estão relacionadas a depressão, contudo a análise de bigramas apresentada adiante apresenta evidências de que tais palavras geralmente precedem as palavras "depressed" ou "depressive", formando expressões como "depressive episode", "fucking depressed" e "feeling depressive." 
 
-Em seguida é apresentado um histograma da frequência de palavras. Geralmente as expressões mais comuns possuem frequência maior, enquanto expressões mais específicas possuem baixa frequencia. O histograma de proporções geralmente evidencia o padrão de escrita do autor, onde maior assimetria à direita evidencia a característica do(s) autor(es) de repetir pouco as palavras. 
+Em seguida é apresentado um histograma da frequência de palavras. Geralmente as expressões mais comuns possuem frequência maior, enquanto expressões mais específicas possuem baixa frequência. O histograma de proporções geralmente evidencia o padrão de escrita do autor, onde maior assimetria à direita evidencia a característica do(s) autor(es) de repetir pouco as palavras. 
 
 <div class="fold s">
 ```{r, message=FALSE,results='hide',echo=TRUE,warning=FALSE}
@@ -420,7 +420,7 @@ tidy_tweets %>%
 ```
 </div>
 
-Ao comparar a frequência de palavras relacionadas ao sentimento "surprise" observa-se a presença de diversas palavras positivas. Um resultado curioso é a presença da palavra "Trump", uma óbvia referência ao presidente dos Estados Unidos Donald Trump. Ainda avaliado as ocorrências em "surprise" nota-se que "hope" é uma palavra que aparece com relativa frequência nos tweets relacionados com depressão. Obviamente, "money", também aparece com certa frequência
+Ao comparar a frequência de palavras relacionadas ao sentimento "surprise" observa-se a presença de diversas palavras positivas. Um resultado curioso é a presença da palavra "Trump", uma óbvia referência ao presidente dos Estados Unidos Donald Trump. Ainda avaliando as ocorrências em "surprise" nota-se que "hope" é uma palavra que aparece com relativa frequência nos tweets relacionados com depressão. Obviamente, "money", também aparece com certa frequência
 
 <div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
@@ -613,7 +613,7 @@ A rede de palavras apresenta três nós nos entornos das palavras "depression", 
 
 É relevante destacar que outras conexões de palavras aparecem com relativa frequência ao longo do texto, sendo as principais: "hard"->"time", "mental"->"health", "social"->"media" e "love"->"island". Com excessão da última, as demais conexões estão relacionadas, segundo a literatura pertinente, com depressão sendo "social media" uma aparição bastante interessante.
 
-No contexto da análise de sentimentos já está evidente que ansiedade possui relação próxima com depressão e sentimentos relacionados. Abaixo realizamos uma análise de correlação entre as palavras cujo objetivo é identifica palavras mais correlacionadas com algum termo específico, no caso "anxiety". 
+No contexto da análise de sentimentos já está evidente que ansiedade possui relação próxima com depressão e sentimentos relacionados. Abaixo realizamos uma análise de correlação entre as palavras cujo objetivo é identificar palavras mais correlacionadas com algum termo específico, no caso "anxiety". 
 
 <div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
@@ -648,7 +648,8 @@ word_cors %>%
 ```
 </div>
 
-As palavras mais correlacionadas com "anxiety" são "depression", "disorder" e "social". Mais uma vez se comprova a estreita relação entre ansiedade e depressão. A aparição da palavra "social" neste contexto é bastante interessante pois, segundo a rede de palavras, "social" é frequentemente seguido de "media", então conclui-se que há correlação positiva entre "social media" e "anxiety". Sendo assim observa-se que há estreita relação entre "social media" e depressão, relacão intermediada por "anxiety". 
+As palavras mais correlacionadas com "anxiety" são "depression", "disorder" e "social". Mais uma vez se comprova a estreita relação entre ansiedade e depressão. A aparição da palavra "social" neste contexto é bastante interessante pois, segundo a rede de palavras, "social" é frequentemente seguido de "media", então conclui-se que há correlação positiva entre "social media" e "anxiety". Sendo assim observa-se que há estreita relação entre "social media" e depressão, relação intermediada por "anxiety". 
+
 ## Dendogramas
 
 <div class="fold s">
@@ -691,7 +692,7 @@ A observação do dendrograma revela uma certa dificuldade de identificação de
 
 ## Análise de tópicos
 
-Nesta etapa será realizada uma análise de tópicos para verificar se o método LDA é capaz de encontrar algum agrupar os tweets de alguma forma. Na análise, cada usuário do Twitter será visto como o "documento" do qual o texto faz parte. Para isso, criamos um banco de dados onde as palavras e suas frequências são agrupadas por usuários, identificados pelo $\texttt{screenName}$. Adicionalmente, será feita a suposição de que os textos fazem parte de dois grupos desconhecidos e através da função $\texttt{LDA}$ do pacote $\texttt{topicmodels}$, serão obtidas as probabilidades de cada palavra e de cada usuário (documento) pertencer a cada um dos grupos, que serão identificados pelos números 1 e 2.
+Nesta etapa será realizada uma análise de tópicos para verificar se o método LDA é capaz de agrupar os tweets de alguma forma que nos auxilie na análise de sentimentos negativos. Na análise, cada usuário do Twitter será visto como o "documento" do qual o texto faz parte. Para isso, criamos um banco de dados onde as palavras e suas frequências são agrupadas por usuários, identificados pelo $\texttt{screenName}$. Adicionalmente, será feita a suposição de que os textos fazem parte de dois grupos desconhecidos e através da função $\texttt{LDA}$ do pacote $\texttt{topicmodels}$, serão obtidas as probabilidades de cada palavra e de cada usuário (documento) pertencer a cada um dos grupos, que serão identificados pelos números 1 e 2.
 
 <div class="fold s">
 ```{r message=FALSE,results='hide',echo=TRUE}
@@ -731,7 +732,7 @@ depre_top_terms %>%
 ```
 </div>
 
-Após o método LDA ser aplicado, o índice $\texttt{beta}$ fornece a probabilidade de cada palavra pertencer a um dos grupos. Durante a análise, notamos que não parece haver grupos distintos bem definidos nos tweets analisados, sendo os grupos 1 e 2 bastante similiras e com várias palavras em comum. Tal resultados também foi verificado quando se connsidera números maiores ($k$) de grupos desconhecidos. No gráfico acima são apresentadas para cada grupo identificado pelo LDA as palavras que possuem as maiores de $\texttt{beta}$. Apesar dos grupos 1 e 2 serem bastante parecidos, podemos observar que o primeiro grupo parece estar mais relacionado com o estado "depressed", enquanto no segundo grupo tem-se uma ênfase maior no sentimento "depression".
+Após o método LDA ser aplicado, o índice $\texttt{beta}$ fornece a probabilidade de cada grupo conter cada uma das palavras. Durante a análise, notamos que não parece haver grupos distintos bem definidos nos tweets analisados, sendo os grupos 1 e 2 bastante similares e com várias palavras em comum. Tal resultado também foi verificado quando se considera números maiores ($k$) de grupos desconhecidos. No gráfico acima são apresentadas para cada grupo identificado pelo LDA as palavras que possuem os maiores valores de $\texttt{beta}$. Apesar dos grupos 1 e 2 serem bastante parecidos, podemos observar que o primeiro grupo parece estar mais relacionado com o estado "depressed", enquanto no segundo grupo tem-se uma ênfase maior no sentimento "depression".
 
 <div class="fold s">
 ```{r message=FALSE,echo=TRUE}
@@ -766,11 +767,11 @@ exemplo4$text[2]
 ```
 </div>
 
-Como mencionado, pelo LDA também podemos estimar uma probabilidade que cada usuário tem de pertencer a cada um dos grupos. De maneira similar como foi feito para as palavras, no código anterior identificamos dentro dos grupos 1 e 2 quais pessoas tinham as maiores probabilidades, que é dada pelo índice $\texttt{gamma}$. Acima são mostrados alguns textos dos usuários identificados pelo LDA, onde podemos ver que alguns dos textos parecem ser provenientes de pessoas com um nível expressivo de descontentamento ou tristeza, como os exemplos 1 e 3. No exemplo 2 temos um exemplo onde o usuário escreve diversos trechos relacionados ao livro Dom Quixote de Miguel de Cervantes, onde seus textos podem ter algum grau de tristeza mas não necessariamente indicar que a pessoa tenha depressão. No exemplo 4, o usuário escreve sobre depressão, o que pode explicar o fato dele ser incluído no grupo sobre o sentimento "depression". Em geral, notamos que o método LDA apresenta dificuldade em encontrar grupos dentro dos tweets analisados, mas que a medida de probabilidade para cada pessoa ainda pode fornecer um indicativo se cada pessoa está apresentando textos que se destacam dos demais, o que poderia ser um possível indício de sentimentos negativos que estajam relacionados ao estado de depressão.
+Como mencionado, pelo LDA também podemos estimar uma probabilidade que cada usuário tem de pertencer a cada um dos grupos. De maneira similar como foi feito para as palavras, no código anterior identificamos dentro dos grupos 1 e 2 quais pessoas tinham as maiores probabilidades, que é dada pelo índice $\texttt{gamma}$. Acima são mostrados alguns textos dos usuários identificados pelo LDA, onde podemos ver que alguns dos textos parecem ser provenientes de pessoas com um nível expressivo de descontentamento ou tristeza, como os exemplos 1 e 3. No exemplo 2 temos um exemplo onde o usuário escreve diversos trechos relacionados ao livro Dom Quixote de Miguel de Cervantes, onde seus textos podem ter algum grau de tristeza mas não necessariamente indicar que a pessoa tenha depressão. No exemplo 4, o usuário escreve sobre depressão, o que pode explicar o fato dele ser incluído no grupo sobre o sentimento "depression". Em geral, notamos que o método LDA apresenta dificuldade em encontrar grupos dentro dos tweets analisados, mas que a medida de probabilidade para cada pessoa ainda pode fornecer um indicativo se cada pessoa está apresentando textos que se destacam dos demais, o que poderia ser um possível indício de sentimentos negativos que estejam relacionados ao estado de depressão.
 
 ## Índice de depressão e tristeza
 
-Um dos objetivos desse trabalho é fornecer um método que seja capaz de identificar se uma pessoa apresenta sinais de depressão através dos seus textos no Twitter. Uma proposta que apresentamos nessa direção é utilizar um índice que leva em consideração a proporção de palavras relacionadas à depressão que cada usuário digitou. Para isso, consideramos uma lista de 99 palavras que possuem alguma relação com depressão fornecida na página da internet \cite(https://adarkershadeofblue.wordpress.com/2011/08/20/99-words-about-depression/). A palavra depressed também foi adicionada à essa lista, uma vez que na análise de redes essa palavras foi observada possuir uma maior relação com sentimentos depressivos que depressive e depression.
+Um dos objetivos desse trabalho é fornecer um método que seja capaz de identificar se uma pessoa apresenta sinais de depressão através dos seus textos no Twitter. Uma proposta que apresentamos nessa direção é utilizar um índice que leva em consideração a proporção de palavras relacionadas à depressão que cada usuário digitou. Para isso, consideramos uma lista de 99 palavras que possuem alguma relação com depressão fornecida na página da internet \cite(https://adarkershadeofblue.wordpress.com/2011/08/20/99-words-about-depression/). A palavra depressed também foi adicionada à essa lista, uma vez que na análise de redes essa palavra foi observada possuir uma maior relação com sentimentos depressivos (expressados usualmente por termos coloquiais) que depressive e depression.
 
 Considerando para cada usuário $n_{\text{tot}}$ o número total de palavras digitadas (desconsiderando stopwords) e $n_{\text{dep}}$ o número de palavras que estão presentes na lista de 100 palavras relacionadas à depressão, o índice que nós propomos é dado por
 $$
@@ -780,7 +781,7 @@ em que $p_{\text{dep}} = n_{\text{dep}}/n_{\text{tot}}$ é a proporção de pala
 $$
 p_{\text{dep}} \rightarrow 0 \Rightarrow \text{dep}_{\text{scr}} \rightarrow 0 \quad\text{e}\quad p_{\text{dep}} \rightarrow 1 \Rightarrow \text{dep}_{\text{scr}} \rightarrow 1,
 $$ 
-ou seja, quanto mais próximo de um for o valor de $\text{dep}_{\text{scr}}$, mais indícios a pessoa terá de estar escrevendo sobre algo relacionado à sentimentos de depressão. Vale destacar que se a análise fosse feita somente sobre $p_{\text{dep}}$, pessoas que escrevem pouco tenderiam a ter mais indícios de depressão mesmo contendo poucas palavras na lista utilizada. Ao se considerar $\text{dep}_{\text{scr}}$ ao invés de simplesmente $p_{\text{dep}}$, levamos em conta a ideia de que entre duas pessoas com o mesmo valor de $p_{\text{dep}}$, aquela com maior número de palavras depressivas $n_{\text{dep}}$ deverá ter um índice de depressão maior, enquante se duas pessoas tiverem o mesmo valor de $n_{\text{dep}}$, o valor de $\text{dep}_{\text{scr}}$ seja maior para o indivíduo com maior $p_{\text{dep}}$. 
+ou seja, quanto mais próximo de um for o valor de $\text{dep}_{\text{scr}}$, mais indícios a pessoa terá de estar escrevendo sobre algo relacionado à sentimentos de depressão. Vale destacar que se a análise fosse feita somente sobre $p_{\text{dep}}$, pessoas que escrevem pouco tenderiam a ter mais indícios de depressão mesmo contendo poucas palavras na lista utilizada. Ao se considerar $\text{dep}_{\text{scr}}$ ao invés de simplesmente $p_{\text{dep}}$, levamos em conta a ideia de que entre duas pessoas com o mesmo valor de $p_{\text{dep}}$, aquela com maior número de palavras depressivas $n_{\text{dep}}$ deverá ter um índice de depressão maior, enquanto se duas pessoas tiverem o mesmo valor de $n_{\text{dep}}$, o valor de $\text{dep}_{\text{scr}}$ seja maior para o indivíduo com maior $p_{\text{dep}}$. 
 
 Um problema com $\text{dep}_{\text{scr}}$ é que, se $p_{\text{dep}}$ tende à uma constante conforme $n_{\text{tot}}\rightarrow \infty$, então $n_{\text{dep}} \rightarrow \infty \Rightarrow \text{dep}_{\text{scr}} \rightarrow 1$, independente do valor limite de $p_{\text{dep}}$. Por outro lado, como mencionamos anteriormente, para valores finitos de $n_{\text{tot}}$ e $n_{\text{dep}}$ temos que $\text{dep}_{\text{scr}}$ fornece critérios de comparação mais adequados que utilizar somente $p_{\text{dep}}$. No código abaixo o valor de $\text{dep}_{\text{scr}}$ foi calculado para cada usuário analisado.
 
@@ -838,7 +839,7 @@ print(c(mai1,mai2,mei1,mei2))
 # Considerações finais
 
 Encerramos este trabalho, atingindo o objetivo inicial de identificação e classificação de sentimentos dos indivíduos, através da análise computacional, aplicada a uma base de dados extraida de redes sociais (Twitter).
-Podemos expandir esta aplicação, replicando as metodologias utilizadas, em outras fontes diferentes, visando não somente a classificação de índividuos ou produtos, mas também segmentação e/ou construção de modelos para estimativas futuras. 
+Podemos expandir esta aplicação, replicando as metodologias utilizadas, em outras fontes diferentes, visando não somente a classificação de indivíduos ou produtos, mas também segmentação e/ou construção de modelos para estimativas futuras. 
 
 # Referências bibliográficas
 
