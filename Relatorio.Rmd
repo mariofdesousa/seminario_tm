@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 O objetivo do trabalho é analisar as formas pelas quais são expressados sentimentos negativos nas redes sociais. Isso se dá devido à grande importância da análise desses sentimentos, já que segundo a Organização Mundial de Saúde, estima-se que 300 milhões de pessoas sofram de depressão ao redor do mundo, o que representa um incremento de 18% entre 2005 e 2015.Além disso, o WHO[^1] mostra que no pior dos casos, a depressão leva ao suicídio, sendo que é estimado que 800 000 pessoas morram de suicídio todos os anos, sendo a segunda maior causa de morte entre jovens de 15 a 29 anos. 
 
-Além disso, a depressão pode ter vários tipos de impactos na sociedade \cite{marcotte01}, estimam os custos de emprego e renda da depressão, mostrando que existem diversos tipos de custos além de tratamentos e remédios, já que pessoas com depressão estão mais propensas a perder seu emprego e têm mais dificuldade de inserção no mercado de trabalho.
+Além disso, a depressão pode ter vários tipos de impactos na sociedade. \cite{marcotte01} estimam os custos de emprego e renda da depressão, mostrando que existem diversos tipos de custos além de tratamentos e remédios, já que pessoas com depressão estão mais propensas a perder seu emprego e têm mais dificuldade de inserção no mercado de trabalho.
 
 Mas na incapacidade de identificar as pessoas com algum caso clínico de depressão, foram utilizados dados de palavras relacionadas à sentimentos negativos na rede social "twitter", por ser considerado um *"microblog"* no qual as pessoas postam constantemente e, segundo o site "Statista"[^2], tinha 328 milhões de usuários até o fim de março de 2017, sendo que o mesmo site mostrou que é a rede que teve o maior engajamento nos primeiros quatro meses do mesmo ano.
 
@@ -42,11 +42,11 @@ Estamos trabalhando com o estudo computacional de opiniões, sentimentos e emoç
 No trabalho a seguir, utilizamos o R para tratar estes textos e resolver o nosso problema através de diferentes técnicas de mineração de textos, com análise de sentimentos, nuvem de palavras e análise de tópicos, por exemplo. Adicionalmente, propomos uma nova métrica para mensurar o nível de depressão de uma pessoa através dos seus textos no Twitter.
 
 ## Descrição dos dados
-A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo as palavras "depression", "depressive" e "depressed". 
+A base de dados utilizada contém 30000 tweets extraídos com auxílio da função $\texttt{searchTwitter}$ do pacote $\texttt{twitteR}$. O banco de dados é composto por 10000 tweets escritos em inglês durante o período que compreende 01/01/2015 a 06/06/2017, contendo cada uma das seguintes palavras "depression", "depressive" e "depressed". 
 
 A função $\texttt{searchTwitter}$ retorna uma lista com diversas informações, então faz-se necessário aplicar a função $\texttt{twListToPdf}$, também disponível no pacote $\texttt{twitteR}$, para transformar a lista do twitter em um dataframe compatível com as técnicas de manipulação de textos  $\texttt{tidy}$ e $\texttt{tm}$.
 
-Quando se deseja aplicar técnicas de mineração de texto, a "limpeza" do conjunto textual selecionado é de fundamental importância. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras geralmente recebe o nome de *stopwords*. As *stopwords*  são problemáticas pois ao mesmo tempo que não acrescentam valor semântico, são muito frequentes\footnote{por serem compostos por artigos, preposições e pronomes.}. No caso em questão, utilizou-se , primeiramente, o método clássico, onde se utiliza uma lista pré-concebida de palavras para cada idioma @v15, contudo é relevante mencionar que em etapas posteriores novas palavras foram incluídas na lista de *stopwords*.
+Quando se deseja aplicar técnicas de mineração de texto, a "limpeza" do conjunto textual selecionado é de fundamental importância. Este procedimento tem como objetivo retirar palavras que não acrescentam significado próprio ao texto. Este conjunto de palavras geralmente recebe o nome de *stopwords*. As *stopwords*  são problemáticas pois ao mesmo tempo que não acrescentam valor semântico, são muito frequentes devido ao fato de serem compostas por artigos, preposições e/ou pronomes. No caso em questão, utilizou-se , primeiramente, o método clássico, onde se utiliza uma lista pré-concebida de palavras para cada idioma @v15, contudo é relevante mencionar que em etapas posteriores novas palavras foram incluídas na lista de *stopwords*.
 
 ## Contagem e frequência de palavras
 
@@ -61,8 +61,6 @@ Uma vez contabilizada a quantidade de palavras que aparecem dentro de um banco d
 Outra opção de identificação de concentração de palavras na análise de sentimentos, são as nuvens de palavras que são imagens que demonstram de maneira visual a frequência da ocorrência das palavras em um dado texto.
 
 Após criarmos um arquivo com a contagem das palavras, quanto maior for o número de ocorrências de uma palavra, maior a mesma será na nuvem de palavras.  As wordclouds são feitas com as palavras mais utilizadas em um determinado texto ou documento, de forma que o aspecto visual fique concentrado nas palavras mais importantes.
-
-Para a nossa base de dados foram utilizados tweets da plataforma social "twitter", sendo que foram baixados 30.000(trinta mil) tweets, tendo a partir deles palavras relacionadas a depressão, sendo todas no idioma inglês, como "depression" e "anxiety".
 
 Como mencionado anteriormente, nosso dados foram obtidos da plataforma Twitter diretamente no programa R. Dado isso foi feita uma separação dos dados e os mesmos foram transformados em "Data Frame" para manipulação. Depois fizemos todas as limpezas necessárias para que o texto ficasse uniforme, como deixar todas as letras minúsculas, tirar pontuação, links e espaços em branco desnecessários e, por fim, números e palavras desnecessárias.
 
@@ -252,7 +250,7 @@ tweets_tidy_df %>%
 ```
 </div>
 
- No caso em questão observa-se elevada quantidade de palavras de cunho negativo como "anxiety", "sad", "stressed", "shit", "feel", "hate", "lost", "tired" ,"episode" e "fucking". As palavras "feel" e "episode" não necessariamente estão relacionadas a depressão, contudo a análise de bigramas apresentada adiante apresenta evidências de que tais palavras geralmente precedem as palavras "depressed" ou "depressive", formando expressões como "depressive episode", "fucking depressed" e "feeling depressive." 
+ No caso em questão observa-se elevada quantidade de palavras de cunho negativo como "anxiety", "sad", "stressed", "shit", "feel", "hate", "lost", "tired" ,"episode" e "fucking". As palavras "feel" e "episode" não necessariamente estão relacionadas a depressão, contudo a análise de bigramas apresentada adiante, em termos de rede de palavras, mostra evidências de que tais palavras geralmente precedem as palavras "depressed" ou "depressive", formando expressões como "depressive episode", "fucking depressed" e "feeling depressive." 
 
 Em seguida é apresentado um histograma da frequência de palavras. Geralmente as expressões mais comuns possuem frequência maior, enquanto expressões mais específicas possuem baixa frequência. O histograma de proporções geralmente evidencia o padrão de escrita do autor, onde maior assimetria à direita evidencia a característica do(s) autor(es) de repetir pouco as palavras. 
 
